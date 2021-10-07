@@ -1,0 +1,76 @@
+[
+    {
+        "kind": "equ",
+        "names": [
+            {
+                "name": "送风机",
+                "abbreviations": [
+                    "送风"
+                ]
+            },{
+                "name": "磨煤机",
+                "abbreviations": [
+                    "钢球磨煤机", "球磨机", "中速磨"
+                ]
+            },{
+                "name": "给煤机",
+                "abbreviations": [
+                    "皮带给煤机"
+                ]
+            },{
+                "name": "空预器",
+                "abbreviations": [
+                    "空气预热器", "容克式换热器", "空气换热器"
+                ]
+            }
+        ]
+    },{
+        "kind": "per",
+        "names": [
+            {
+                "name": "王二",
+                "abbreviations": [
+                    
+                ]
+            },{
+                "name": "李三",
+                "abbreviations": [
+                    
+                ]
+            },
+            {
+                "name": "周董",
+                "abbreviations": [
+                    
+                ]
+            }
+        ]
+    }, {
+        "kind": "label3",
+        "names": [
+            {
+                "name": "name1",
+                "abbreviations": [
+                    "abbreviations1", "abbreviations2", "abbreviations3"
+                ]
+            },{
+                "name": "name2",
+                "abbreviations": [
+                    "abbreviations1", "abbreviations2", "abbreviations3"
+                ]
+            },
+            {
+                "name": "name3",
+                "abbreviations": [
+                    "abbreviations1", "abbreviations2", "abbreviations3"
+                ]
+            },
+            {
+                "name": "name4",
+                "abbreviations": [
+                    "abbreviations1", "abbreviations2", "abbreviations3"
+                ]
+            }
+        ]
+    }
+]
