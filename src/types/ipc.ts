@@ -1,18 +1,18 @@
 /**
  * 上传字典数据
  */
-export const UPLOADDICTIONARYDATA = 'UPLOAD-DICTIONARY-DATA'
+export const UPLOAD_DICTIONARY_DATA = 'UPLOAD_DICTIONARY_DATA'
 
 
 /**
  * 返回字典数据
  */
-export const RETURNDICTIONARYDATA = 'RETURN-DICTIONARY-DATA'
+export const RETURN_DICTIONARY_DATA = 'RETURN_DICTIONARY_DATA'
 
 /**
  * 保存字典数据
  */
-export const SAVEDICTIONARYDATA = 'SAVE-DICTIONARY-DATA'
+export const SAVE_DICTIONARY_DATA = 'SAVE_DICTIONARY_DATA'
 
 /**
  * 返回保存字典数据的结果
@@ -23,7 +23,7 @@ export const SAVE_DICTIONARY_DATA_RESULT = 'SAVE_DICTIONARY_DATA_RESULT'
 /**
  * 上传语料数据
  */
-export const UPLOADTEXTSDATA = 'UPLOAD-TEXTS-DATA'
+export const UPLOAD_TEXTS_DATA = 'UPLOAD_TEXTS_DATA'
 
 
 /**
@@ -40,6 +40,19 @@ export const SAVE_TEXTS_DATA = 'SAVE_TEXTS_DATA'
  * 保存语料数据返回的结果
  */
 export const SAVE_TEXTS_DATA_RESULT = 'SAVE_TEXTS_DATA_RESULT'
+
+
+/**
+ * 新建字典数据窗口
+ */
+export const OPEN_DICTIONARY_WINDOW = 'OPEN_DICTIONARY_WINDOW'
+
+/**
+ * 新建语料数据窗口
+ */
+export const OPEN_TEXT_WINDOW = 'OPEN_TEXT_WINDOW'
+
+
 
 
 /**

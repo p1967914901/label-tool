@@ -6,8 +6,6 @@ import { Button, Modal, Table, Input, message } from 'antd';
 import { RETURNTEXTSDATA, SAVE_TEXTS_DATA, SAVE_TEXTS_DATA_RESULT } from '../types/ipc';
 import DeleteOutlined from '@ant-design/icons/lib/icons/DeleteOutlined';
 import ExclamationCircleOutlined from '@ant-design/icons/lib/icons/ExclamationCircleOutlined';
-import { data } from 'jquery';
-
 
 interface TextsViewProps {
     
@@ -123,13 +121,6 @@ class TextsView extends Component <TextsViewProps, TextsViewState>{
                             text: '',
                             label: []
                         })
-                        // labels.unshift({
-                        //     kind: '',
-                        //     color: '#999',
-                        //     names: [],
-                        // })
-                        // disabledList.unshift(true)
-                        // // console.log(labels)
                         this.setState({ data: [...data], editKey: '1' })
                     }
                 } style={{

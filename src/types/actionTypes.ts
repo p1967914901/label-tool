@@ -1,0 +1,4 @@
+/**
+ * 上传新的字典数据
+ */
+export const UPLOAD_NEW_DICTIONARY_DATA = 'UPLOAD_NEW_DICTIONARY_DATA'

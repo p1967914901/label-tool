@@ -1,9 +1,11 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain, globalShortcut } = require('electron')
+const {app, BrowserWindow, globalShortcut } = require('electron')
 const path = require('path')
+const { registProviderWindow, unRegistProviderWindow } = require('electron-wpc');
 // const { electron } = require('process')
 const {newIpcListener} = require('./ipcMain')
 
+const mainTAG = 'MAIN_WIN';
 
 
 function createWindow () {
@@ -18,7 +20,7 @@ function createWindow () {
         resizable: false,
         zoomFactor: 1,
         openDevTools: false,
-        // autoHideMenuBar: true,
+        autoHideMenuBar: true,
         // frame:false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -32,7 +34,7 @@ function createWindow () {
 
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
     return mainWindow;
 }
 
@@ -45,6 +47,14 @@ var mainWindow;
 app.whenReady().then(() =>{
     // console.log('qpp---whenready');
     mainWindow = createWindow();
+    registProviderWindow(mainWindow, mainTAG);
+    /**
+     * 打开导航栏字典发出广播
+     */
+    // registBrodcastTransfer("OPEN_DICTIONARY_BROADCAST", (resolve, reject, args) => {
+    //     console.log(args);
+    //     resolve(args);
+    // });
     newIpcListener(mainWindow)
     // 注册事件，打开控制台
     globalShortcut.register('Alt+Z', () => {
@@ -59,6 +69,10 @@ app.whenReady().then(() =>{
             width: 1100,
             height: 700,
         })
+    })
+    //...销毁
+    mainWindow.on('close',()=>{
+        unRegistProviderWindow(mainTAG); 
     })
     // setTimeout(() => {
     //     mainWindow.minimize()
@@ -79,6 +93,8 @@ app.on('activate', function () {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

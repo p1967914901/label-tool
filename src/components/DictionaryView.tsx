@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import 'antd/dist/antd.css';
 import { Button, Input, Modal, Table, Tag, message } from 'antd';
-import { DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 
 // import $ from 'jquery';
 
-import { RETURNDICTIONARYDATA, SAVEDICTIONARYDATA, SAVE_DICTIONARY_DATA_RESULT } from '../types/ipc';
+import { RETURN_DICTIONARY_DATA, SAVE_DICTIONARY_DATA, SAVE_DICTIONARY_DATA_RESULT } from '../types/ipc';
 // import { ColumnsType } from 'antd/lib/table/interface';
 
 
@@ -137,6 +137,7 @@ class Dictionary extends Component<DictionaryProps, DictionaryState>{
     public render(): JSX.Element {
         // const { Panel } = Collapse;
         const { Column } = Table;
+        const { ipcRenderer } = (window as any).electron
         const { labels, disabledList, inputVisibleName, inputNameByShow } = this.state
         labels.forEach((value: any, index: number) => {
             value['key'] = 'label' + index
@@ -163,14 +164,20 @@ class Dictionary extends Component<DictionaryProps, DictionaryState>{
                 </Button>
                 <Button size='middle' type='primary' onClick={
                     () => {
-                        const { ipcRenderer } = (window as any).electron
-                        ipcRenderer.send(SAVEDICTIONARYDATA, this.state.labels)
+                        ipcRenderer.send(SAVE_DICTIONARY_DATA, this.state.labels)
                     }
                 } style={{
                     // float: 'right',
                     margin: '0px 10px 10px 0px'
                 }}>
                     保存
+                </Button>
+                <Button icon={<UploadOutlined />} onClick={
+                    () => {
+                        // ipcRenderer.send(OPEN_DICTIONARY_WINDOW)
+                    }
+                }>
+                    上传字典
                 </Button>
                 <Table dataSource={labels} size='middle' columns={this.labelsColum}
                     scroll={{
@@ -449,7 +456,7 @@ class Dictionary extends Component<DictionaryProps, DictionaryState>{
         //         ]
         //     }], disabledList: [true, true, true]
         // })
-        ipcRenderer.on(RETURNDICTIONARYDATA, (event: any, data: any) => {
+        ipcRenderer.on(RETURN_DICTIONARY_DATA, (event: any, data: any) => {
             // const label:Array<string> = []
             const colors:Array<string> = [
                 '#145415', '#988432', '#748', '#558741', '#729813'
