@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { UPLOAD_NEW_DICTIONARY_DATA } from '../types/actionTypes'
-import { MainStoreType, StoreType } from '../types/propsTypes'
+import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPLOAD_NEW_DICTIONARY_DATA } from '../types/actionTypes'
+import { DictionaryWindowStoreType, MainStoreType, StoreType, TextWindowStoreType } from '../types/propsTypes'
 
 const initStore:StoreType = {
     Main: {
@@ -12,6 +12,14 @@ const initStore:StoreType = {
             ['dict5', ''],
 
         ]
+    },
+    DictionaryWindow: {
+        tableData: [],
+        path: ''
+    },
+    TextWindow: {
+        data: [],
+        path: ''
     }
 }
 
@@ -35,8 +43,36 @@ const MainReducer = (state: MainStoreType = initStore.Main, action: any) => {
     return state
 }
 
+const DictionaryWindowReducer = (state: DictionaryWindowStoreType = initStore.DictionaryWindow, action: any) => {
+    if (action.type === UPDATE_DICTIONARY_DATA) {
+        const { tableData, path } = action
+        // console.log(path);
+        return {
+            ...state,
+            tableData,
+            path
+        }
+    }
+    return state
+}
+
+const TextWindowReducer = (state: TextWindowStoreType = initStore.TextWindow, action: any) => {
+    if (action.type === UPDATE_TEXTS_DATA) {
+        const { data, path } = action
+        // console.log(path);
+        return {
+            ...state,
+            data,
+            path
+        }
+    }
+    return state
+}
+
 const combineReducer = combineReducers({
-    Main: MainReducer
+    Main: MainReducer,
+    DictionaryWindow: DictionaryWindowReducer,
+    TextWindow: TextWindowReducer
 })
 const reducer = (state:StoreType = initStore, action:any) => {
     const store1:StoreType = combineReducer(state, action)

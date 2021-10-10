@@ -40,23 +40,15 @@ exports.newIpcListener = (mainWindow) => {
         })
         openFilePromise.then((res) => {
             if (!res.canceled) {
-                const dataFile = xlsx.parse(res.filePaths[0])
-                data = dataFile[0]['data'].slice(1).map(arr => ({
-                    label: arr[0],
-                    name: arr[1],
-                    abbreviations: [...arr.slice(2)]
-                }))
-                event.returnValue = {
-                    tableData: data,
-                    path: res.filePaths[0]
-                }
+                event.returnValue = res.filePaths[0]
             }
+            event.returnValue = ''
         })
     })
     /**
      * 保存字典数据
      */
-    ipcMain.on(SAVE_DICTIONARY_DATA, (event, data) => {
+    ipcMain.on(SAVE_DICTIONARY_DATA, (event) => {
         // console.log(data);
         const saveFilePromise = dialog.showSaveDialog({
             title: '保存字典数据',
@@ -70,35 +62,16 @@ exports.newIpcListener = (mainWindow) => {
         })
         saveFilePromise.then((res) => {
             if (!res.canceled) {
-                const configData = [{
-                    name: '字典',
-                    data: [
-                        ['标签', '全称', '别名']
-                    ]
-                }]
-                data.forEach((value) => {
-                    configData[0]['data'].push([
-                        value['label'], value['name'], ...value['abbreviations']
-                    ])
-                })
-                const buffer = xlsx.build(configData)
-                return new Promise((resolve, reject) => {
-
-                    fs.writeFile(res.filePath, buffer, (err) => {
-                        if (!err) {
-                            resolve('success')
-                        }
-                        reject('fail')
-                    })
-                })
+                event.returnValue = {
+                    message: 'success',
+                    path: res.filePath
+                }
             } else {
-                return new Promise((resolve, reject) => {
-                    resolve('cancel')
-                })
+                event.returnValue = {
+                    message: 'cancel',
+                    path: ''
+                }
             }
-        }).then(result => {
-            console.log(result)
-            // event.reply(SAVE_DICTIONARY_DATA_RESULT, result)
         })
     })
     /**
@@ -118,23 +91,7 @@ exports.newIpcListener = (mainWindow) => {
         })
         openFilePromise.then((res) => {
             if (!res.canceled) {
-                fs.readFile(res.filePaths[0], 'utf-8', (err, data) => {
-                    if (err) {
-                        throw(err)
-                    }
-                    const dataByHandle = []
-                    lines = data.split("\r\n")
-                    lines.forEach((line) => {
-                        dataByHandle.push({
-                            text: line,
-                            label: []
-                        });
-                    })
-                    event.returnValue = {
-                        data: dataByHandle,
-                        path: res.filePaths[0]
-                    }
-                })
+                event.returnValue = res.filePaths[0]
             }
         })
     })

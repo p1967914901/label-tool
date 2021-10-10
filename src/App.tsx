@@ -6,10 +6,10 @@ import {
 } from 'react-router-dom'
 import './App.css'
 // import DictionaryView from './components/DictionaryView';
-import DictionaryWindow from './components/DictionaryWindow';
+// import DictionaryWindow from './components/DictionaryWindow';
 import Main from './components/Main'
-import ModelConfigWindow from './components/ModelConfigWindow';
-import TextWindow from './components/TextWindow';
+// import ModelConfigWindow from './components/ModelConfigWindow';
+// import TextWindow from './components/TextWindow';
 
 
 
@@ -31,9 +31,9 @@ class App extends Component<AppProps, AppState>{
 		return (
 			<Router>
 				<Switch>
-					<Route path="/DictionaryWindow/:path" component={DictionaryWindow} exact/>
+					{/* <Route path="/DictionaryWindow/:path" component={DictionaryWindow} exact/>
 					<Route path="/TextWindow/:path" component={TextWindow} exact/>
-					<Route path="/ModelConfigWindow" component={ModelConfigWindow} exact/>
+					<Route path="/ModelConfigWindow" component={ModelConfigWindow} exact/> */}
 					<Route path="/" component={Main}/>
 				</Switch>
 				
