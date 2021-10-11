@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, globalShortcut } = require('electron')
 const path = require('path')
+const url = require('url');
 const { registProviderWindow, unRegistProviderWindow } = require('electron-wpc');
 // const { electron } = require('process')
 const {newIpcListener} = require('./ipcMain')
@@ -24,12 +25,19 @@ function createWindow () {
         // frame:false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: true
+            nodeIntegration: true,
+            // webSecurity: false
         }
     })
 
     // and load the index.html of the app.
-    // mainWindow.loadFile('./build/index.html')
+    // mainWindow.loadFile(path.join(__dirname, '/build/index.html'))
+    // mainWindow.loadURL(`file://${path.join(__dirname, '/build/index.html')}`)
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, '/build/index.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    //     }))
     mainWindow.loadURL('http://localhost:3000/');
 
 

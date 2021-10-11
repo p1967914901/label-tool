@@ -5,11 +5,8 @@ import {
 	Switch,
 } from 'react-router-dom'
 import './App.css'
-// import DictionaryView from './components/DictionaryView';
-// import DictionaryWindow from './components/DictionaryWindow';
 import Main from './components/Main'
-// import ModelConfigWindow from './components/ModelConfigWindow';
-// import TextWindow from './components/TextWindow';
+
 
 
 
