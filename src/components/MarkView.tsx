@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Modal, Table, Tag } from 'antd';
+import { Input, Modal, Table, Tag, Popover, Button } from 'antd';
 import 'antd/dist/antd.css';
 import Icon, { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 // import $ from 'jquery'
@@ -29,8 +29,11 @@ interface MarkViewState {
 		color: string,
 		key: string
 	},
-	displayColorPicker: boolean,
-	// colorPickerColor: string,
+	popoverVisibleName: string,
+	colorPickerPosition: [number, number],
+	nameToColor: {
+		[name: string]: string
+	}
 }
 class MarkView extends Component<MarkViewProps, MarkViewState>{
 	private startIndex: number
@@ -45,11 +48,15 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 			data: [],
 			editKey: '',
 			inputVisible: false,
-			displayColorPicker: false,
+			popoverVisibleName: '',
+			colorPickerPosition: [0, 0],
 			labelSettingConfig: {
 				label: '',
 				color: '',
 				key: '',
+			},
+			nameToColor: {
+
 			},
 			labels: [
 				{
@@ -64,10 +71,6 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 					color: '#edafda',
 					name: '时间',
 					key: 't'
-				}, {
-					color: '#93b7e3',
-					name: 'per',
-					key: 'p'
 				}
 			],
 		}
@@ -85,15 +88,36 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 				// ellipsis: true,
 				align: 'left',
 				render: (text: Array<string>, record: { key?: string, text: Array<string> }, index: number) => {
+					const { nameToColor } = this.state;
 					return (
 						<div onMouseUp={
 							() => {
-								console.log(getSelection())
+								// console.log(getSelection()?.toString())
+								// console.log(text[this.startIndex]);
+								const { data } = this.state
+								let start = Math.min(this.startIndex, this.endIndex)
+								let end = Math.max(this.startIndex, this.endIndex)
+								// console.log(text.slice(start, end + 1).join(''))
+								if (text.slice(start, end + 1).join('').includes(getSelection()?.toString() as string) ) {
+									const textBySelect: string = getSelection()?.toString() as string;
+									start = start + text.slice(start, end + 1).join('').indexOf(textBySelect);
+									end = start + textBySelect.length - 1;
+									data[index]['text'].splice(start, end + 1 - start)
+									data[index]['text'].splice(start, 0, getSelection()?.toString() as string)
+									// console.log(data[index]['text']);
+									nameToColor[textBySelect] = 'blue';
+									this.setState({ data: [...data], nameToColor })
+								}
+								// if ()
+
+								getSelection()?.removeAllRanges()
+								this.startIndex = this.endIndex = -1
 							}
 						}>
 							{
 								text.map((value: string, i: number) => {
-									if (value.length === 1) {
+									if (!value) return '' ;
+									if (value.length <= 1 && !(value in nameToColor)) {
 										return (
 											<div key={i} style={{
 												// float: 'left'
@@ -110,20 +134,13 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 											} onMouseUp={
 												() => {
 													this.endIndex = i
-													console.log(this.startIndex, this.endIndex)
+													// console.log(this.startIndex, this.endIndex)
 													// if (this.startIndex === this.endIndex && getSelection()?.toString() === value) {
 													//     console.log(value)
 													// }
-													const { data } = this.state
-													let start = Math.min(this.startIndex, this.endIndex)
-													let end = Math.max(this.startIndex, this.endIndex)
-													if (text.slice(start, end + 1).join('') === getSelection()?.toString()) {
-														data[index]['text'].splice(start, end + 1 - start)
-														data[index]['text'].splice(start, 0, getSelection()?.toString() as string)
-														this.setState({ data: [...data] })
-													}
-													console.log(getSelection()?.toString());
-													getSelection()?.removeAllRanges()
+													
+													// console.log(getSelection()?.toString());
+													// getSelection()?.removeAllRanges()
 												}
 											}>
 												{value}
@@ -131,14 +148,25 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 										)
 									} else {
 										return (
-											<Tag key={i} color={'black'} closable style={{
+											<Tag key={i} color={ nameToColor[value] } closable 
+											icon={<Icon component={SettingIcon} onClick={
+												() => {
+													
+												}
+											} />}
+											style={{
 												marginLeft: '5px'
 											}} onClose={
 												() => {
 													const { data } = this.state
+													// console.log(data[index]['text'], i);
+													const v = value;
 													data[index]['text'].splice(i, 1)
-													data[index]['text'].splice(i, 0, ...value.split(''))
-													this.setState({ data: [...data] })
+													console.log(v, v.split(''));
+													data[index]['text'].splice(i, 0, ...v.split(''))
+													// console.log(data[index]['text']);
+													delete nameToColor[value]
+													this.setState({ data: [...data], nameToColor })
 												}
 											}>
 												{value}
@@ -157,8 +185,9 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 
 	public render(): JSX.Element {
 		// const dataStr = 
-		const { data, labels, inputVisible, displayColorPicker, labelSettingConfig } = this.state
-		// console.log(data)
+		const { data, labels, inputVisible, labelSettingConfig, popoverVisibleName, nameToColor } = this.state
+		// if ()
+		console.log(data, nameToColor);
 		return (
 			<div style={{
 				width: '100%',
@@ -166,91 +195,122 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 				// backgroundColor: 'red'
 				borderBottom: '1px solid black'
 			}}>
-				
+
 				<div style={{
 					width: '100%',
 					height: '50px',
-					padding: '10px',
+					padding: '10px',//rgb(255, 255, 255)
 					// position: 'absolute'
 				}}>
 					{
 						labels.map((value: { color: string; name: string; key: string; }, index: number) => (
-							<Tag closable color={value['color']} key={'name' + index}
-								icon={<Icon component={SettingIcon} onClick={
-									() => {
-										const labelSettingConfig = {
-											label: value['name'],
-											color: value['color'],
-											key: value['key']
+							<Popover title='标签设置' visible={popoverVisibleName === value['name']} key={'label' + index}
+								placement='bottomLeft'
+								content={
+									<div style={{
+										width: '100%',
+										height: '100px',
+										lineHeight: '30px',
+										// backgroundColor: 'red',
+									}}>
+										<div style={{
+											height: '30px'
+										}}>
+											标签名：<Input value={labelSettingConfig.label} size='small' onChange={
+												(e) => {
+													labelSettingConfig.label = e.target.value
+													this.setState({ labelSettingConfig: { ...labelSettingConfig } })
+												}
+											} style={{
+												width: '100px'
+											}} />
+										</div>
+										<div style={{
+											height: '30px'
+										}}>
+											快捷键：
+											<div style={{
+												display: 'inline-block',
+												// backgroundColor: 'blue',
+												height: '30px'
+											}}>
+												Ctrl + &nbsp;
+											</div>
+											<Input maxLength={1} value={labelSettingConfig.key} size='small' onChange={
+												(e) => {
+													labelSettingConfig.key = e.target.value
+													this.setState({ labelSettingConfig: { ...labelSettingConfig } })
+												}
+											} style={{
+												width: '30px'
+											}} />
+										</div>
+										<div style={{
+											height: '30px',
+											// po
+										}}>
+											颜色：
+											<Popover title='拾色器' placement='left' trigger='click'
+												content={
+													<SketchPicker color={labelSettingConfig.color}
+														onChange={
+															(color: ColorResult) => {
+																labelSettingConfig.color = color.hex
+																this.setState({ labelSettingConfig })
+															}
+														}
+													/>
+												}
+											>
+												<div style={{
+													width: '20px',
+													height: '20px',
+													transform: 'translate(15px, 5px)',
+													display: 'inline-block',
+													backgroundColor: labelSettingConfig.color
+												}}></div>
+											</Popover>
+											<Button type='primary' size='small' style={{
+												float: 'right',
+												transform: 'translate(-5px, 2.5px)',
+											}} onClick={
+												() => {
+													labels[index] = {
+														name: labelSettingConfig.label,
+														key: labelSettingConfig.key,
+														color: labelSettingConfig.color
+													}
+													this.setState({ labels, popoverVisibleName: '' })
+												}
+											}>
+												确定
+											</Button>
+										</div>
+									</div>
+								}
+							>
+								<Tag closable color={value['color']} key={'name' + index}
+									icon={<Icon component={SettingIcon} onClick={
+										() => {
+											const labelSettingConfig = {
+												label: value['name'],
+												color: value['color'],
+												key: value['key']
+											}
+											const name = popoverVisibleName === value['name'] ? '' : value['name']
+											this.setState({ labelSettingConfig, popoverVisibleName: name })
 										}
-										this.setState({ labelSettingConfig }, () => {
-											Modal.info({
+									} />}
+									style={{
+										userSelect: 'none'
+									}}
+									onClose={
+										(e) => {
+											e.preventDefault()
+											Modal.confirm({
 												title: '警告',
-												icon: <Icon component={SettingIcon} />,
-												content: (
-													<div style={{
-														width: '80%',
-														height: '100px',
-														lineHeight: '30px',
-														// backgroundColor: 'red',
-													}}>
-														<div style={{
-															height: '30px'
-														}}>
-															标签名：<Input defaultValue={labelSettingConfig.label} size='small' onChange={
-																(e) => {
-																	labelSettingConfig.label = e.target.value
-																	this.setState({ labelSettingConfig: {...labelSettingConfig} })
-																}
-															} style={{
-																width: '100px'
-															}}/>
-														</div>
-														<div style={{
-															height: '30px'
-														}}>
-															快捷键：
-															<div style={{
-																display: 'inline-block',
-																// backgroundColor: 'blue',
-																height: '30px'
-															}}>
-																Ctrl + &nbsp;
-															</div>
-															<Input maxLength={1} defaultValue	={labelSettingConfig.key} size='small' onChange={
-																(e) => {
-																	labelSettingConfig.key = e.target.value
-																	this.setState({ labelSettingConfig: {...labelSettingConfig} })
-																}
-															} style={{
-																width: '30px'
-															}}/>
-														</div>
-														<div style={{
-															height: '30px',
-															// po
-														}}>
-															颜色：
-															<div style={{
-																width: '20px',
-																height: '20px',
-																transform: 'translate(15px, 5px)',
-																// marginTop: '10px',
-																// margin: '5px',
-																display: 'inline-block',
-																backgroundColor: labelSettingConfig.color
-															}} onClick={
-																() => {
-																	console.log('object')
-																	
-																	this.setState({ displayColorPicker: displayColorPicker ? false : true })
-																}
-															}>
-
-															</div>
-														</div>
-													</div>
-												),
+												icon: <ExclamationCircleOutlined />,
+												content: '请确认是否要删除标签：' + value['name'],
 												okText: '确认',
 												cancelText: '取消',
 												onOk: () => {
@@ -258,30 +318,11 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 													this.setState({ labels })
 												}
 											});
-										})
-									}
-								} />}
-								style={{
-									userSelect: 'none'
-								}}
-								onClose={
-									(e) => {
-										e.preventDefault()
-										Modal.confirm({
-											title: '警告',
-											icon: <ExclamationCircleOutlined />,
-											content: '请确认是否要删除标签：' + value['name'],
-											okText: '确认',
-											cancelText: '取消',
-											onOk: () => {
-												labels.splice(index, 1)
-												this.setState({ labels })
-											}
-										});
-									}
-								}>
-								{value['name'] + ' [' + value['key'] + ']'}
-							</Tag>
+										}
+									}>
+									{value['name'] + ' [' + value['key'] + ']'}
+								</Tag>
+							</Popover>
 						))
 					}
 					{
@@ -338,25 +379,6 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 				<Table columns={this.columns} dataSource={data} size='small'
 					scroll={{ y: 380 }}
 				/>
-				{
-					displayColorPicker &&
-					<div style={{
-						position: 'fixed',
-						top: '100px',
-						zIndex: 99999,
-						backgroundColor: 'red'
-						// width: '100%'
-					}}>
-						<SketchPicker color={labelSettingConfig.color} 
-							onChange={
-								(color: ColorResult) => {
-									labelSettingConfig.color = color.hex
-									this.setState({ labelSettingConfig })
-								}
-							}
-						/>
-					</div>
-				}
 			</div>
 		)
 	}
@@ -367,12 +389,11 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 			text: Array<string>
 		}> = [];
 		[
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
-			["富", "动", "24", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
+			["富", "动", "2", "4", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
+			["2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "二", "次", "电", "压", "突", "降", "为", "零", "（", "加", "强", "振", "打", "和", "排", "灰", "无", "效", "）", "，", "联", "系", "维", "护", "处", "理", "。", "0", "8", ":", "3", "0", " ", "2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "拉", "弧", "保", "护", "跳", "闸", "。"],
+			["今", "日", "值", "班", "：", "公", "司", "领", "导", "-", "-", "-", "周", "董", "，", "运", "行", "部", "-", "-", "-", "黄", "士", "雷", "，", "维", "护", "部", "-", "-", "-", "郑", "晓", "，", "燃", "料", "部", "-", "-", "-", "潘", "巨", "元", "，", "设", "备", "部", "-", "-", "-", "屠", "海", "彪", "，", "安", "健", "环", "-", "-", "-", "王", "爱", "民", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			
 		].forEach((value: string[], index: number) => {
 			data.push({
 				key: '' + index,
@@ -380,6 +401,22 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 			})
 		})
 		this.setState({ data })
+		document.addEventListener('keydown', (e) => {
+			if (e.ctrlKey) {
+				const { labels, nameToColor } = this.state
+				for (let i = 0; i < labels.length; i++){
+					if (labels[i]['key'] === e.key) {
+						for (let name in nameToColor) {
+							if (nameToColor[name] === 'blue') {
+								nameToColor[name] = labels[i]['color']
+							}
+						}
+						this.setState({ nameToColor })
+						break;
+					}
+				}
+			}
+		})
 	}
 
 
