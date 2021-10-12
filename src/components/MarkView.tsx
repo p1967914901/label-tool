@@ -412,7 +412,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 							}
 						}
 						this.setState({ nameToColor })
-						break;
+						break; 
 					}
 				}
 			}
