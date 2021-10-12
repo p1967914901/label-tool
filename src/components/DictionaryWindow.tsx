@@ -158,7 +158,7 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                         style={{ width: 78 }}
                         onBlur={
                           (e) => {
-                            console.log(record, i);
+                            // console.log(record, i);
                             this.setState({ inputVisibleName: '' })
                             if (!e.target.value) return;
                             tableData[parseInt(record['key'])]['abbreviations'].push(e.target.value)

@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import DictionaryWindow from './DictionaryWindow';
 import { updateDictionaryData, updateTextsData } from '../action';
 import TextWindow from './TextWindow';
+import MarkView from './MarkView';
 
 
 const { ipcRenderer } = (window as any).electron
@@ -189,6 +190,7 @@ class Main extends Component<MainProps, MainState>{
               minHeight: 500,
             }}
           >
+            <MarkView />
             <Switch>
               <Route path="/dictionary" component={DictionaryWindow} />
               <Route path="/texts" component={TextWindow}/>
