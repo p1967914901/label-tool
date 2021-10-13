@@ -190,7 +190,7 @@ class Main extends Component<MainProps, MainState>{
               minHeight: 500,
             }}
           >
-            <MarkView />
+            {/* <MarkView /> */}
             <Switch>
               <Route path="/dictionary" component={DictionaryWindow} />
               <Route path="/texts" component={TextWindow}/>

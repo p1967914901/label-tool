@@ -372,7 +372,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 								})
 							}
 						}>
-							<PlusOutlined /> 添加别名
+							<PlusOutlined /> 添加标签
 						</Tag>
 					}
 				</div>

@@ -277,7 +277,7 @@ var MarkView = /** @class */ (function (_super) {
                             });
                         } },
                         react_1["default"].createElement(icons_1.PlusOutlined, null),
-                        " \u6DFB\u52A0\u522B\u540D")),
+                        " \u6DFB\u52A0\u6807\u7B7E")),
             react_1["default"].createElement(antd_1.Table, { columns: this.columns, dataSource: data, size: 'small', scroll: { y: 380 } })));
     };
     MarkView.prototype.componentDidMount = function () {
