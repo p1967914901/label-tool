@@ -26,8 +26,7 @@ interface TextWindowState {
   pageSize: number,
 }
 
-const { ipcRenderer } = (window as any).electron
-const { WPCResolverDelegate } = (window as any).electron_wpc
+// const { ipcRenderer } = (window as any).electron
 
 
 class TextWindow extends Component<TextWindowProps, TextWindowState>{
@@ -256,71 +255,25 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
 
   }
 
-  private uploadTextData(): void {
-    const hide = message.loading('正在上传字典...', 0);
-    const { data, path } = ipcRenderer.sendSync(UPLOAD_TEXTS_DATA)
-    setTimeout(hide, 0);
-    document.title = path;
-    const TAG = 'MAIN_WIN';
-    const resolverDelegate = new WPCResolverDelegate(TAG);
-    this.setState({ data }, () => {
-      resolverDelegate.send(UPLOAD_TEXTS_DATA, [path.split('\\')[path.split('\\').length - 1], path])
-        .then((result: string) => {
-          if (result === 'success') {
-            message.success('新的字典上传成功', 1)
-          } else {
-            message.warning('字典已上传过', 1)
-          }
-        })
-      // this.setState({ isEmpty: false })
-    })
 
-  }
 
   private saveFile(path: string) : void {
-    const { data, updateTextsData } = this.props;
-    let dataString = ''
-    data.forEach((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => {
-      dataString += (value['text'] + '\r\n')
-    })
-    const fs = (window as any).fs;
-    fs.writeFile(path, dataString, (err: any) => {
-      if (err) {
+    // const { data, updateTextsData } = this.props;
+    // let dataString = ''
+    // data.forEach((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => {
+    //   dataString += (value['text'] + '\r\n')
+    // })
+    // const fs = (window as any).fs;
+    // fs.writeFile(path, dataString, (err: any) => {
+    //   if (err) {
 
-      }
-      updateTextsData(data, path)
-      // console.log('success')
-    })
+    //   }
+    //   updateTextsData(data, path)
+    //   // console.log('success')
+    // })
   }
 
-  private readFile(path: string): void {
-    document.title = path
-    const fs = (window as any).fs;
-    fs.readFile(path, 'utf-8', (err: any, dataString: string) => {
-      if (err) {
-        console.log(err)
-      }
-      const data: Array<{
-        key?: string,
-        text: string,
-        label: Array<{
-          start: number,
-          end: number,
-          label: string
-        }>
-      }> = []
-      const lines = dataString.split("\r\n")
-      lines.forEach((line) => {
-        data.push({
-          text: line,
-          label: []
-        });
-      })
-      // this.setState({ data })
-      // this.pr
-    })
 
-  }
 }
 
 const mapStateToProps = (state: StoreType, ownProps?: any) => {

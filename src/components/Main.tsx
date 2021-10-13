@@ -20,7 +20,7 @@ import TextWindow from './TextWindow';
 import MarkView from './MarkView';
 
 
-const { ipcRenderer } = (window as any).electron
+// const { ipcRenderer } = (window as any).electron
 
 // import TextsView from './TextsView';
 
@@ -136,22 +136,22 @@ class Main extends Component<MainProps, MainState>{
           <Header className="site-layout-background" style={{ padding: 0, backgroundColor: 'white' }}>
             <Button icon={<UploadOutlined />} onClick={
               () => {
-                const path: string = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
-                if (path === '') {
-                  return;
-                }
-                history.push('/dictionary')
-                dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path])
-                let index = dictionaryList.length - 1
-                for (let i = 0; i < dictionaryList.length - 1; i++) {
-                  if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
-                    dictionaryList.pop()
-                    index = i
-                    break;
-                  }
-                }
-                this.setState({ dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] })
-                this.readXlsxFile(path)
+                // const path: string = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
+                // if (path === '') {
+                //   return;
+                // }
+                // history.push('/dictionary')
+                // dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path])
+                // let index = dictionaryList.length - 1
+                // for (let i = 0; i < dictionaryList.length - 1; i++) {
+                //   if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
+                //     dictionaryList.pop()
+                //     index = i
+                //     break;
+                //   }
+                // }
+                // this.setState({ dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] })
+                // this.readXlsxFile(path)
               }
             }>
               上传字典
@@ -159,25 +159,25 @@ class Main extends Component<MainProps, MainState>{
             <Button icon={<UploadOutlined />} onClick={
               () => {
                 history.push('/texts')
-                const path: string = ipcRenderer.sendSync(UPLOAD_TEXTS_DATA)
-                stringList.push([path.split('\\')[path.split('\\').length - 1], path])
-                let index = stringList.length - 1
-                for (let i = 0; i < stringList.length - 1; i++) {
-                  if (stringList[i][0] === path.split('\\').pop() && stringList[i][1] === path) {
-                    stringList.pop()
-                    index = i
-                    break;
-                  }
-                }
-                this.setState({ stringList, openKeys: ['text'], selectedKeys: ['text' + index] })
-                this.readTxtFile(path)
+                // const path: string = ipcRenderer.sendSync(UPLOAD_TEXTS_DATA)
+                // stringList.push([path.split('\\')[path.split('\\').length - 1], path])
+                // let index = stringList.length - 1
+                // for (let i = 0; i < stringList.length - 1; i++) {
+                //   if (stringList[i][0] === path.split('\\').pop() && stringList[i][1] === path) {
+                //     stringList.pop()
+                //     index = i
+                //     break;
+                //   }
+                // }
+                // this.setState({ stringList, openKeys: ['text'], selectedKeys: ['text' + index] })
+                // this.readTxtFile(path)
               }
             }>
               上传语料
             </Button>
             <Button icon={<PlayCircleOutlined />} onClick={
               () => {
-                ipcRenderer.send(OPEN_MODEL_CONFIG_WINDOW)
+                // ipcRenderer.send(OPEN_MODEL_CONFIG_WINDOW)
               }
             }>
               初始化
@@ -203,70 +203,36 @@ class Main extends Component<MainProps, MainState>{
   }
 
   public componentDidMount(): void {
-    const { WPCProviderDelegate } = (window as any).electron_wpc
-    // console.log(WPCProviderDelegate)
-    const providerDelegate = new WPCProviderDelegate();
-    /**
-     * 上传字典数据监听
-     */
-    providerDelegate.on(UPLOAD_DICTIONARY_DATA, (resolve: any, reject: any, arg: any) => {
-      const { dictionaryList } = this.state
-      dictionaryList.push(arg)
-      for (let i = 0; i < dictionaryList.length - 1; i++) {
-        if (dictionaryList[i][0] === arg[0] && dictionaryList[i][1] === arg[1]) {
-          dictionaryList.pop()
-          resolve('warn')
-          break;
-        }
-      }
-      this.setState({ dictionaryList })
-      resolve('success')
-    });
-    /**
-     * 上传语料数据监听UPLOAD_TEXTS_DATA
-     */
-    providerDelegate.on(UPLOAD_TEXTS_DATA, (resolve: any, reject: any, arg: any) => {
-      const { stringList } = this.state
-      stringList.push(arg)
-      for (let i = 0; i < stringList.length - 1; i++) {
-        if (stringList[i][0] === arg[0] && stringList[i][1] === arg[1]) {
-          stringList.pop()
-          resolve('warn')
-          break;
-        }
-      }
-      this.setState({ stringList })
-      resolve('success')
-    });
+    
   }
 
   private readXlsxFile(path: string): void {
     // document.title = path
-    const dataFile = (window as any).xlsx.parse(path)
-    const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
-      label: arr[0],
-      name: arr[1],
-      abbreviations: [...arr.slice(2)]
-    }))
-    // console.log(tableData, path, dataFile);
-    this.props.updateDictionaryData(tableData, path)
+    // const dataFile = (window as any).xlsx.parse(path)
+    // const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
+    //   label: arr[0],
+    //   name: arr[1],
+    //   abbreviations: [...arr.slice(2)]
+    // }))
+    // // console.log(tableData, path, dataFile);
+    // this.props.updateDictionaryData(tableData, path)
   }
 
   private readTxtFile(path: string): void {
-    (window as any).fs.readFile(path, 'utf-8', (err: any, data: string) => {
-      if (err) {
-          throw(err)
-      }
-      const dataByHandle: TextsDataType = []
-      const lines = data.split("\r\n")
-      lines.forEach((line) => {
-          dataByHandle.push({
-              text: line,
-              label: []
-          });
-      })
-      this.props.updateTextsData(dataByHandle, path)
-  })
+    // (window as any).fs.readFile(path, 'utf-8', (err: any, data: string) => {
+    //   if (err) {
+    //       throw(err)
+    //   }
+    //   const dataByHandle: TextsDataType = []
+    //   const lines = data.split("\r\n")
+    //   lines.forEach((line) => {
+    //       dataByHandle.push({
+    //           text: line,
+    //           label: []
+    //       });
+    //   })
+    //   this.props.updateTextsData(dataByHandle, path)
+  // })  
   }
 
 }

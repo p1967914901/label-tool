@@ -1,5 +1,5 @@
 import { PlusOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Table, Input, Tag, Button, Modal, message } from 'antd';
+import { Table, Input, Tag, Button, Modal } from 'antd';
 import React, { Component } from 'react';
 import Icon from '@ant-design/icons';
 import { SAVE_DICTIONARY_DATA, UPLOAD_DICTIONARY_DATA } from '../types/ipc';
@@ -21,8 +21,7 @@ interface DictionaryWindowState {
 }
 
 
-const { ipcRenderer } = (window as any).electron
-const { WPCResolverDelegate } = (window as any).electron_wpc
+// const { ipcRenderer } = (window as any).electron
 
 
 class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindowState>{
@@ -41,7 +40,7 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
 
   public render(): JSX.Element {
     const { Column } = Table;
-    const { ipcRenderer } = (window as any).electron
+    // const { ipcRenderer } = (window as any).electron
     const { pageSize, inputNameByShow, inputVisibleName } = this.state
     const { tableData, path, updateDictionaryData } = this.props
     // console.log(path)
@@ -228,7 +227,7 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
           top: 10
         }} onClick={
           () => {
-            this.saveFile(path)
+            // this.saveFile(path)
           }
         }>
           保存
@@ -241,12 +240,12 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
           left: 110 - 5
         }} onClick={
           () => {
-            const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
-            if (message === 'success') {
-              this.saveFile(path)
-            } else {
+            // const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
+            // if (message === 'success') {
+            //   this.saveFile(path)
+            // } else {
 
-            }
+            // }
           }
         }>
           另存为
@@ -259,7 +258,6 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
           }}
           onClick={
             () => {
-              this.uploadDictionaryData()
             }
           }>
           更换字典
@@ -292,70 +290,26 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
     
   }
 
-
-  private uploadDictionaryData(): void {
-    // const { uploadNewDictionaryData } = this.props
-    const hide = message.loading('正在上传字典...', 0);
-    const { tableData, path } = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
-    setTimeout(hide, 0);
-    document.title = path;
-    // console.log(path.split('\\'));
-    const TAG = 'MAIN_WIN';
-    const resolverDelegate = new WPCResolverDelegate(TAG);
-
-    // uploadNewDictionaryData(path.split('\\')[path.split('\\').length - 1], path)
-    this.setState({
-      tableData: tableData.map((v: any, i: number) => ({
-        ...v,
-        key: '' + i
-      }))
-    }, () => {
-      resolverDelegate.send(UPLOAD_DICTIONARY_DATA, [path.split('\\')[path.split('\\').length - 1], path])
-        .then((result: string) => {
-          if (result === 'success') {
-            message.success('新的字典上传成功', 1)
-          } else {
-            message.warning('字典已上传过', 1)
-          }
-        })
-      // this.setState({ isEmpty: false })
-    })
-  }
-
-  private readFile(path: string): void {
-    // document.title = path
-    const dataFile = (window as any).xlsx.parse(path)
-    const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
-      label: arr[0],
-      name: arr[1],
-      abbreviations: [...arr.slice(2)]
-    }))
-    this.setState({ path }, () => {
-      // this.setState({ tableData })
-      this.props.updateDictionaryData(tableData, path)
-    })
-  }
-
   private saveFile(path: string) : void {
-    const { tableData, updateDictionaryData } = this.props
-    const configData = [{
-        name: '字典',
-        data: [
-            ['标签', '全称', '别名']
-        ]
-    }]
-    tableData.forEach((value) => {
-        configData[0]['data'].push([
-            value['label'], value['name'], ...value['abbreviations']
-        ])
-    })
-    const buffer = (window as any).xlsx.build(configData);
-    (window as any).fs.writeFile(path, buffer, (err: any) => {
-      if (err) {
+    // const { tableData, updateDictionaryData } = this.props
+    // const configData = [{
+    //     name: '字典',
+    //     data: [
+    //         ['标签', '全称', '别名']
+    //     ]
+    // }]
+    // tableData.forEach((value) => {
+    //     configData[0]['data'].push([
+    //         value['label'], value['name'], ...value['abbreviations']
+    //     ])
+    // })
+    // const buffer = (window as any).xlsx.build(configData);
+    // (window as any).fs.writeFile(path, buffer, (err: any) => {
+    //   if (err) {
 
-      }
-      updateDictionaryData(tableData, path)
-    })
+    //   }
+    //   updateDictionaryData(tableData, path)
+    // })
 
   }
 
