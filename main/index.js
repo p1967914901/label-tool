@@ -32,14 +32,14 @@ function createWindow () {
 
     // and load the index.html of the app.
     // mainWindow.loadFile('../build/index.html')
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '../build/index.html'),
-        protocol: 'file:',
-        slashes: true,
-        // hash: "/"
-    }))
+    // mainWindow.loadURL(url.format({
+    //     pathname: path.join(__dirname, '../build/index.html'),
+    //     protocol: 'file:',
+    //     slashes: true,
+    //     // hash: "/"
+    // }))
     // console.log(path.join(__dirname, '../build/index.html'))
-    // mainWindow.loadURL(`file://${path.join(__dirname, '/build/index.html')}`)
+    mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
     // mainWindow.loadURL(url.format({
     //     pathname: path.join(__dirname, '/build/index.html'),
     //     protocol: 'file:',

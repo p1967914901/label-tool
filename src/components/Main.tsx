@@ -20,7 +20,7 @@ import TextWindow from './TextWindow';
 import MarkView from './MarkView';
 
 
-// const { ipcRenderer } = (window as any).electron
+const { ipcRenderer } = (window as any).electron
 
 // import TextsView from './TextsView';
 
@@ -136,22 +136,22 @@ class Main extends Component<MainProps, MainState>{
           <Header className="site-layout-background" style={{ padding: 0, backgroundColor: 'white' }}>
             <Button icon={<UploadOutlined />} onClick={
               () => {
-                // const path: string = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
-                // if (path === '') {
-                //   return;
-                // }
-                // history.push('/dictionary')
-                // dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path])
-                // let index = dictionaryList.length - 1
-                // for (let i = 0; i < dictionaryList.length - 1; i++) {
-                //   if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
-                //     dictionaryList.pop()
-                //     index = i
-                //     break;
-                //   }
-                // }
-                // this.setState({ dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] })
-                // this.readXlsxFile(path)
+                const path: string = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
+                if (path === '') {
+                  return;
+                }
+                history.push('/dictionary')
+                dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path])
+                let index = dictionaryList.length - 1
+                for (let i = 0; i < dictionaryList.length - 1; i++) {
+                  if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
+                    dictionaryList.pop()
+                    index = i
+                    break;
+                  }
+                }
+                this.setState({ dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] })
+                this.readXlsxFile(path)
               }
             }>
               上传字典
@@ -207,15 +207,15 @@ class Main extends Component<MainProps, MainState>{
   }
 
   private readXlsxFile(path: string): void {
-    // document.title = path
-    // const dataFile = (window as any).xlsx.parse(path)
-    // const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
-    //   label: arr[0],
-    //   name: arr[1],
-    //   abbreviations: [...arr.slice(2)]
-    // }))
-    // // console.log(tableData, path, dataFile);
-    // this.props.updateDictionaryData(tableData, path)
+    document.title = path
+    const dataFile = (window as any).xlsx.parse(path)
+    const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
+      label: arr[0],
+      name: arr[1],
+      abbreviations: [...arr.slice(2)]
+    }))
+    // console.log(tableData, path, dataFile);
+    this.props.updateDictionaryData(tableData, path)
   }
 
   private readTxtFile(path: string): void {

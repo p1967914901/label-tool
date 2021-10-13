@@ -23,6 +23,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 var react_1 = require("react");
 var antd_1 = require("antd");
@@ -30,11 +37,14 @@ require("antd/dist/antd.css");
 var icons_1 = require("@ant-design/icons");
 var icons_2 = require("@ant-design/icons");
 var react_router_dom_1 = require("react-router-dom");
+// import DictionaryView from './DictionaryView';
+var ipc_1 = require("../types/ipc");
 var Icon_1 = require("./Icon");
 var react_redux_1 = require("react-redux");
 var DictionaryWindow_1 = require("./DictionaryWindow");
 var action_1 = require("../action");
 var TextWindow_1 = require("./TextWindow");
+var ipcRenderer = window.electron.ipcRenderer;
  >
     stringList;
 Array < [name, string, path, string] > ,
@@ -119,22 +129,22 @@ var Main = /** @class */ (function (_super) {
             react_1["default"].createElement(antd_1.Layout, { className: "site-layout" },
                 react_1["default"].createElement(Header, { className: "site-layout-background", style: { padding: 0, backgroundColor: 'white' } },
                     react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.UploadOutlined, null), onClick: function () {
-                            // const path: string = ipcRenderer.sendSync(UPLOAD_DICTIONARY_DATA)
-                            // if (path === '') {
-                            //   return;
-                            // }
-                            // history.push('/dictionary')
-                            // dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path])
-                            // let index = dictionaryList.length - 1
-                            // for (let i = 0; i < dictionaryList.length - 1; i++) {
-                            //   if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
-                            //     dictionaryList.pop()
-                            //     index = i
-                            //     break;
-                            //   }
-                            // }
-                            // this.setState({ dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] })
-                            // this.readXlsxFile(path)
+                            var path = ipcRenderer.sendSync(ipc_1.UPLOAD_DICTIONARY_DATA);
+                            if (path === '') {
+                                return;
+                            }
+                            history.push('/dictionary');
+                            dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path]);
+                            var index = dictionaryList.length - 1;
+                            for (var i = 0; i < dictionaryList.length - 1; i++) {
+                                if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
+                                    dictionaryList.pop();
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            _this.setState({ dictionaryList: dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] });
+                            _this.readXlsxFile(path);
                         } }, "\u4E0A\u4F20\u5B57\u5178"),
                     react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.UploadOutlined, null), onClick: function () {
                             history.push('/texts');
@@ -166,15 +176,15 @@ var Main = /** @class */ (function (_super) {
     Main.prototype.componentDidMount = function () {
     };
     Main.prototype.readXlsxFile = function (path) {
-        // document.title = path
-        // const dataFile = (window as any).xlsx.parse(path)
-        // const tableData = dataFile[0]['data'].slice(1).map((arr: Array<string>) => ({
-        //   label: arr[0],
-        //   name: arr[1],
-        //   abbreviations: [...arr.slice(2)]
-        // }))
-        // // console.log(tableData, path, dataFile);
-        // this.props.updateDictionaryData(tableData, path)
+        document.title = path;
+        var dataFile = window.xlsx.parse(path);
+        var tableData = dataFile[0]['data'].slice(1).map(function (arr) { return ({
+            label: arr[0],
+            name: arr[1],
+            abbreviations: __spreadArrays(arr.slice(2))
+        }); });
+        // console.log(tableData, path, dataFile);
+        this.props.updateDictionaryData(tableData, path);
     };
     Main.prototype.readTxtFile = function (path) {
         // (window as any).fs.readFile(path, 'utf-8', (err: any, data: string) => {
