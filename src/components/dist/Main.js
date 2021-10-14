@@ -37,17 +37,15 @@ require("antd/dist/antd.css");
 var icons_1 = require("@ant-design/icons");
 var icons_2 = require("@ant-design/icons");
 var react_router_dom_1 = require("react-router-dom");
-// import DictionaryView from './DictionaryView';
 var ipc_1 = require("../types/ipc");
 var Icon_1 = require("./Icon");
 var react_redux_1 = require("react-redux");
 var DictionaryWindow_1 = require("./DictionaryWindow");
 var action_1 = require("../action");
 var TextWindow_1 = require("./TextWindow");
+var MarkView_1 = require("./MarkView");
 var ipcRenderer = window.electron.ipcRenderer;
- >
-    stringList;
-Array < [name, string, path, string] > ,
+ > ,
     openKeys;
 Array < string > ,
     selectedKeys;
@@ -58,20 +56,8 @@ var Main = /** @class */ (function (_super) {
     function Main(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            dictionaryList: [
-            // ['dict1', ''],
-            // ['dict2', ''],
-            // ['dict3', ''],
-            // ['dict4', ''],
-            // ['dict5', ''],
-            ],
-            stringList: [
-            // ['dict1', ''],
-            // ['dict2', ''],
-            // ['dict3', ''],
-            // ['dict4', ''],
-            // ['dict5', ''],
-            ],
+            labelList: [],
+            stringList: [],
             openKeys: ['directory'],
             selectedKeys: []
         };
@@ -81,9 +67,8 @@ var Main = /** @class */ (function (_super) {
         var _this = this;
         var Header = antd_1.Layout.Header, Sider = antd_1.Layout.Sider, Content = antd_1.Layout.Content;
         var SubMenu = antd_1.Menu.SubMenu;
-        var _a = this.state, dictionaryList = _a.dictionaryList, stringList = _a.stringList, openKeys = _a.openKeys, selectedKeys = _a.selectedKeys;
-        var history = this.props.history;
-        // console.log('object:', openKeys, selectedKeys);
+        var _a = this.state, labelList = _a.labelList, stringList = _a.stringList, openKeys = _a.openKeys, selectedKeys = _a.selectedKeys;
+        var _b = this.props, history = _b.history, dictionaryData = _b.dictionaryData;
         return (react_1["default"].createElement(antd_1.Layout, null,
             react_1["default"].createElement(Sider, { trigger: null, theme: "light" },
                 react_1["default"].createElement("div", { className: "logo", style: {
@@ -103,16 +88,11 @@ var Main = /** @class */ (function (_super) {
                     react_1["default"].createElement(SubMenu, { key: "dictionary", title: "\u5B57\u5178\u6570\u636E", icon: react_1["default"].createElement(icons_2["default"], { component: Icon_1.DictionaryIcon }), onTitleClick: function (e) {
                             // console.log(e);
                             _this.setState({ openKeys: openKeys[0] === e.key ? [] : [e.key] });
-                        } },
-                        dictionaryList.map(function (value) { return ; }, path),
-                        ": string], index: number) => (",
-                        react_1["default"].createElement(antd_1.Menu.Item, { key: 'dictionary' + index, onClick: function () {
-                                // console.log(value[1].split('\\').join('_'));
-                                history.push('/dictionary');
-                                _this.setState({ selectedKeys: ['dictionary' + index] });
-                                _this.readXlsxFile(value[1]);
-                            } }, value[0]),
-                        ")) }"),
+                        } }, labelList.map(function (value, index) { return (react_1["default"].createElement(antd_1.Menu.Item, { key: value, onClick: function () {
+                            _this.props.updateLabelByShow(value);
+                            _this.props.updateDictionaryData(dictionaryData[value]);
+                            _this.setState({ selectedKeys: [value] });
+                        } }, value)); })),
                     react_1["default"].createElement(SubMenu, { key: "text", title: "\u8BED\u6599\u6570\u636E", icon: react_1["default"].createElement(icons_1.FileTextOutlined, null), onTitleClick: function (e) {
                             _this.setState({ openKeys: openKeys[0] === e.key ? [] : [e.key] });
                         } },
@@ -122,8 +102,6 @@ var Main = /** @class */ (function (_super) {
                                 _this.setState({ selectedKeys: ['text' + index] });
                                 history.push('/texts');
                                 _this.readTxtFile(value[1]);
-                                // console.log(value[1]);
-                                // ipcRenderer.send(OPEN_TEXT_WINDOW, { path: value[1].split('\\').join('_') })
                             } }, value[0]),
                         ")) }"))),
             react_1["default"].createElement(antd_1.Layout, { className: "site-layout" },
@@ -131,35 +109,29 @@ var Main = /** @class */ (function (_super) {
                     react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.UploadOutlined, null), onClick: function () {
                             var path = ipcRenderer.sendSync(ipc_1.UPLOAD_DICTIONARY_DATA);
                             if (path === '') {
+                                antd_1.message.success('您已取消上传', 1);
                                 return;
                             }
-                            history.push('/dictionary');
-                            dictionaryList.push([path.split('\\')[path.split('\\').length - 1], path]);
-                            var index = dictionaryList.length - 1;
-                            for (var i = 0; i < dictionaryList.length - 1; i++) {
-                                if (dictionaryList[i][0] === path.split('\\').pop() && dictionaryList[i][1] === path) {
-                                    dictionaryList.pop();
+                            _this.readXlsxFile(path);
+                        } }, "\u4E0A\u4F20\u5B57\u5178"),
+                    react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.UploadOutlined, null), onClick: function () {
+                            var path = ipcRenderer.sendSync(ipc_1.UPLOAD_TEXTS_DATA);
+                            if (path === '') {
+                                antd_1.message.success('您已取消上传', 1);
+                                return;
+                            }
+                            stringList.push([path.split('\\')[path.split('\\').length - 1], path]);
+                            var index = stringList.length - 1;
+                            for (var i = 0; i < stringList.length - 1; i++) {
+                                if (stringList[i][0] === path.split('\\').pop() && stringList[i][1] === path) {
+                                    stringList.pop();
                                     index = i;
                                     break;
                                 }
                             }
-                            _this.setState({ dictionaryList: dictionaryList, openKeys: ['dictionary'], selectedKeys: ['dictionary' + index] });
-                            _this.readXlsxFile(path);
-                        } }, "\u4E0A\u4F20\u5B57\u5178"),
-                    react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.UploadOutlined, null), onClick: function () {
-                            history.push('/texts');
-                            // const path: string = ipcRenderer.sendSync(UPLOAD_TEXTS_DATA)
-                            // stringList.push([path.split('\\')[path.split('\\').length - 1], path])
-                            // let index = stringList.length - 1
-                            // for (let i = 0; i < stringList.length - 1; i++) {
-                            //   if (stringList[i][0] === path.split('\\').pop() && stringList[i][1] === path) {
-                            //     stringList.pop()
-                            //     index = i
-                            //     break;
-                            //   }
-                            // }
-                            // this.setState({ stringList, openKeys: ['text'], selectedKeys: ['text' + index] })
-                            // this.readTxtFile(path)
+                            _this.setState({ stringList: stringList, openKeys: ['text'], selectedKeys: ['text' + index] });
+                            _this.readTxtFile(path);
+                            antd_1.message.success('您已成功上传的语料数据', 1);
                         } }, "\u4E0A\u4F20\u8BED\u6599"),
                     react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_1.PlayCircleOutlined, null), onClick: function () {
                             // ipcRenderer.send(OPEN_MODEL_CONFIG_WINDOW)
@@ -167,40 +139,68 @@ var Main = /** @class */ (function (_super) {
                 react_1["default"].createElement(Content, { className: "site-layout-background", style: {
                         // margin: '24px 16px',
                         // padding: 24,
-                        minHeight: 500
+                        minHeight: 600
                     } },
                     react_1["default"].createElement(react_router_dom_1.Switch, null,
                         react_1["default"].createElement(react_router_dom_1.Route, { path: "/dictionary", component: DictionaryWindow_1["default"] }),
-                        react_1["default"].createElement(react_router_dom_1.Route, { path: "/texts", component: TextWindow_1["default"] }))))));
+                        react_1["default"].createElement(react_router_dom_1.Route, { path: "/texts", component: TextWindow_1["default"] }),
+                        react_1["default"].createElement(react_router_dom_1.Route, { path: '/mark', component: MarkView_1["default"] }))))));
     };
     Main.prototype.componentDidMount = function () {
     };
     Main.prototype.readXlsxFile = function (path) {
-        document.title = path;
         var dataFile = window.xlsx.parse(path);
-        var tableData = dataFile[0]['data'].slice(1).map(function (arr) { return ({
-            label: arr[0],
-            name: arr[1],
-            abbreviations: __spreadArrays(arr.slice(2))
-        }); });
-        // console.log(tableData, path, dataFile);
-        this.props.updateDictionaryData(tableData, path);
+        var labelList = this.state.labelList;
+        var dictionaryData = this.props.dictionaryData;
+        dataFile[0]['data'].slice(1).forEach(function (arr) {
+            if (labelList.includes(arr[0])) {
+                dictionaryData[arr[0]].push({
+                    label: arr[0],
+                    name: arr[1],
+                    abbreviations: __spreadArrays(arr.slice(2))
+                });
+            }
+            else {
+                labelList.push(arr[0]);
+                dictionaryData[arr[0]] = [{
+                        label: arr[0],
+                        name: arr[1],
+                        abbreviations: __spreadArrays(arr.slice(2))
+                    }];
+            }
+        });
+        if (labelList.length === 0) {
+            antd_1.message.warning('您上传的字典为空', 1);
+            return;
+        }
+        var selectedKeys = this.state.selectedKeys.length === 0 ? [labelList[0]] : this.state.selectedKeys;
+        this.setState({ labelList: labelList, selectedKeys: selectedKeys, openKeys: ['dictionary'] });
+        this.props.updateLabelByShow(selectedKeys[0]);
+        this.props.updateAllDictionaryData(dictionaryData);
+        this.props.updateDictionaryData(JSON.parse(JSON.stringify(dictionaryData[selectedKeys[0]]))); // 深复制
+        this.props.history.push('/dictionary');
     };
     Main.prototype.readTxtFile = function (path) {
-        // (window as any).fs.readFile(path, 'utf-8', (err: any, data: string) => {
-        //   if (err) {
-        //       throw(err)
-        //   }
-        //   const dataByHandle: TextsDataType = []
-        //   const lines = data.split("\r\n")
-        //   lines.forEach((line) => {
-        //       dataByHandle.push({
-        //           text: line,
-        //           label: []
-        //       });
-        //   })
-        //   this.props.updateTextsData(dataByHandle, path)
-        // })  
+        var _this = this;
+        window.fs.readFile(path, 'utf-8', function (err, data) {
+            if (err) {
+                throw (err);
+            }
+            var dataByHandle = [];
+            var lines = data.split("\r\n");
+            lines.forEach(function (line) {
+                dataByHandle.push({
+                    text: line,
+                    label: []
+                });
+            });
+            if (dataByHandle.length === 0) {
+                antd_1.message.warning('您上传的语料数据为空', 1);
+                return;
+            }
+            _this.props.updateTextsData(dataByHandle, path);
+            _this.props.history.push('/texts');
+        });
     };
     return Main;
 }(react_1.Component));
@@ -210,6 +210,8 @@ var mapStateToProps = function (state, ownProps) {
     return __assign(__assign({}, ownProps), Main);
 };
 var mapDispatchToProps = {
+    updateAllDictionaryData: action_1.updateAllDictionaryData,
+    updateLabelByShow: action_1.updateLabelByShow,
     updateDictionaryData: action_1.updateDictionaryData,
     updateTextsData: action_1.updateTextsData
 };

@@ -1,17 +1,12 @@
 import { combineReducers } from 'redux'
-import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPLOAD_NEW_DICTIONARY_DATA } from '../types/actionTypes'
-import { DictionaryWindowStoreType, MainStoreType, StoreType, TextWindowStoreType } from '../types/propsTypes'
+import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPDATE_ALL_DICTIONARY_DATA, MODIFY_LABEL_OF_DICTIONARY_DATA, UPDATE_IS_SAVE, UPDATE_TEXT_TABLE_PAGE, UPDATE_MARK_TEXT_DATA } from '../types/actionTypes'
+import { DictionaryWindowStoreType, MainStoreType, MarkViewStoreType, StoreType, TextWindowStoreType } from '../types/propsTypes'
 
 const initStore:StoreType = {
     Main: {
-        dictionaryList: [
-            ['dict1', ''],
-            ['dict2', ''],
-            ['dict3', ''],
-            ['dict4', ''],
-            ['dict5', ''],
-
-        ]
+        dictionaryData: {},
+        labelByShow: '',
+        isSave: true
     },
     DictionaryWindow: {
         tableData: [],
@@ -19,25 +14,36 @@ const initStore:StoreType = {
     },
     TextWindow: {
         data: [],
-        path: ''
+        path: '',
+        isSave: true,
+        current: 1,
+    },
+    MarkView: {
+        data: [],
+        current: 1,
     }
 }
 
 const MainReducer = (state: MainStoreType = initStore.Main, action: any) => {
-    if (action.type === UPLOAD_NEW_DICTIONARY_DATA) {
-        const { name, path } = action
-        const { dictionaryList } = state
-        // for (let i = 0; i< dictionaryList.length; i++) {
-        //     if (dictionaryList[i][1] === path) {
-                
-        //     }
-        // }
-        dictionaryList.push([name, path])
-        console.log(dictionaryList);
-
+    if (action.type === UPDATE_ALL_DICTIONARY_DATA) {
+        const { dictionaryData } = action
         return {
             ...state,
-            dictionaryList: [...dictionaryList]
+            dictionaryData
+        }
+    } else if (action.type === MODIFY_LABEL_OF_DICTIONARY_DATA) {
+        const { label, tableData } = action
+        const { dictionaryData } = state
+        dictionaryData[label] = tableData
+        return {
+            ...state,
+            ...dictionaryData
+        }   
+    } else if (action.type === UPDATE_IS_SAVE) {
+        const { isSave } = action
+        return {
+            ...state,
+            isSave
         }
     }
     return state
@@ -59,20 +65,51 @@ const DictionaryWindowReducer = (state: DictionaryWindowStoreType = initStore.Di
 const TextWindowReducer = (state: TextWindowStoreType = initStore.TextWindow, action: any) => {
     if (action.type === UPDATE_TEXTS_DATA) {
         const { data, path } = action
-        // console.log(path);
         return {
             ...state,
             data,
             path
         }
+    } else if (action.type === UPDATE_IS_SAVE) {
+        const { isSave } = action
+        // console.log(isSave);
+        return {
+            ...state,
+            isSave
+        }
+    } else if (action.type === UPDATE_TEXT_TABLE_PAGE) {
+        const { current } = action
+        return {
+            ...state,
+            current
+        }
     }
     return state
 }
 
+const MarkViewReducer = (state: MarkViewStoreType = initStore.MarkView, action: any) => {
+    if (action.type === UPDATE_MARK_TEXT_DATA) {
+        const { data } = action
+        return {
+            ...state,
+            data
+        }
+    }  else if (action.type === UPDATE_TEXT_TABLE_PAGE) {
+        const { current } = action
+        return {
+            ...state,
+            current
+        }
+    }
+    return state
+}
+
+
 const combineReducer = combineReducers({
     Main: MainReducer,
     DictionaryWindow: DictionaryWindowReducer,
-    TextWindow: TextWindowReducer
+    TextWindow: TextWindowReducer,
+    MarkView: MarkViewReducer,
 })
 const reducer = (state:StoreType = initStore, action:any) => {
     const store1:StoreType = combineReducer(state, action)

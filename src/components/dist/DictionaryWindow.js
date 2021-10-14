@@ -35,10 +35,12 @@ var icons_1 = require("@ant-design/icons");
 var antd_1 = require("antd");
 var react_1 = require("react");
 var icons_2 = require("@ant-design/icons");
+var ipc_1 = require("../types/ipc");
 var Icon_1 = require("./Icon");
 var react_redux_1 = require("react-redux");
 var action_1 = require("../action");
-// const { ipcRenderer } = (window as any).electron
+// console.log((window as any));
+var ipcRenderer = window.electron.ipcRenderer;
 var DictionaryWindow = /** @class */ (function (_super) {
     __extends(DictionaryWindow, _super);
     function DictionaryWindow(props) {
@@ -57,11 +59,15 @@ var DictionaryWindow = /** @class */ (function (_super) {
         var Column = antd_1.Table.Column;
         // const { ipcRenderer } = (window as any).electron
         var _a = this.state, pageSize = _a.pageSize, inputNameByShow = _a.inputNameByShow, inputVisibleName = _a.inputVisibleName;
-        var _b = this.props, tableData = _b.tableData, path = _b.path, updateDictionaryData = _b.updateDictionaryData;
-        // console.log(path)
+        var _b = this.props, tableData = _b.tableData, updateDictionaryData = _b.updateDictionaryData, modifyLabelOfDictionaryData = _b.modifyLabelOfDictionaryData;
+        // console.log(tableData)
         tableData.forEach(function (value, index) {
             value['key'] = '' + index;
         });
+        var label = '';
+        if (tableData.length) {
+            label = tableData[0]['label'];
+        }
         // console.log('object');
         return (react_1["default"].createElement("div", { style: {
                 width: '100%',
@@ -95,7 +101,8 @@ var DictionaryWindow = /** @class */ (function (_super) {
                                     if (!e.target.value)
                                         return;
                                     tableData[i]['name'] = e.target.value;
-                                    updateDictionaryData(tableData, path);
+                                    updateDictionaryData(tableData);
+                                    modifyLabelOfDictionaryData(label, tableData);
                                     // this.setState({ tableData })
                                 }, onPressEnter: // 键盘确定保存
                                 function (e) {
@@ -103,7 +110,8 @@ var DictionaryWindow = /** @class */ (function (_super) {
                                     if (!e.target.value)
                                         return;
                                     tableData[i]['name'] = e.target.value;
-                                    updateDictionaryData(tableData, path);
+                                    updateDictionaryData(tableData);
+                                    modifyLabelOfDictionaryData(label, tableData);
                                     // this.setState({ tableData })
                                 } }));
                     } }),
@@ -112,7 +120,8 @@ var DictionaryWindow = /** @class */ (function (_super) {
                                 e.preventDefault();
                                 var newNames = abbreviations.filter(function (name) { return name !== abbreviation; });
                                 tableData[i]['abbreviations'] = __spreadArrays(newNames);
-                                updateDictionaryData(__spreadArrays(tableData), path);
+                                updateDictionaryData(__spreadArrays(tableData));
+                                modifyLabelOfDictionaryData(label, __spreadArrays(tableData));
                                 // this.setState({ tableData })
                             } }, abbreviation)); }),
                         'label' + i === inputVisibleName && (react_1["default"].createElement(antd_1.Input, { ref: function (input) {
@@ -123,14 +132,16 @@ var DictionaryWindow = /** @class */ (function (_super) {
                                 if (!e.target.value)
                                     return;
                                 tableData[parseInt(record['key'])]['abbreviations'].push(e.target.value);
-                                updateDictionaryData(tableData, path);
+                                updateDictionaryData(tableData);
+                                modifyLabelOfDictionaryData(label, __spreadArrays(tableData));
                                 // this.setState({ tableData })
                             }, onPressEnter: function (e) {
                                 _this.setState({ inputVisibleName: '' });
                                 if (!e.target.value)
                                     return;
                                 tableData[i]['abbreviations'].push(e.target.value);
-                                updateDictionaryData(tableData, path);
+                                updateDictionaryData(tableData);
+                                modifyLabelOfDictionaryData(label, __spreadArrays(tableData));
                                 // this.setState({ tableData })
                             } })),
                         'label' + i !== inputVisibleName &&
@@ -151,7 +162,8 @@ var DictionaryWindow = /** @class */ (function (_super) {
                                     cancelText: '取消',
                                     onOk: function () {
                                         tableData.splice(i, 1);
-                                        updateDictionaryData(__spreadArrays(tableData), path);
+                                        updateDictionaryData(__spreadArrays(tableData));
+                                        modifyLabelOfDictionaryData(label, __spreadArrays(tableData));
                                         // this.setState({ tableData: [...tableData] })
                                     }
                                 });
@@ -161,25 +173,14 @@ var DictionaryWindow = /** @class */ (function (_super) {
                     position: 'absolute',
                     top: 10
                 }, onClick: function () {
-                    // this.saveFile(path)
-                } }, "\u4FDD\u5B58"),
-            react_1["default"].createElement(antd_1.Button, { type: "primary", size: 'middle', icon: react_1["default"].createElement(icons_2["default"], { component: Icon_1.SaveIcon }), style: {
-                    position: 'absolute',
-                    top: 10,
-                    left: 110 - 5
-                }, onClick: function () {
-                    // const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
-                    // if (message === 'success') {
-                    //   this.saveFile(path)
-                    // } else {
-                    // }
+                    var _a = ipcRenderer.sendSync(ipc_1.SAVE_DICTIONARY_DATA), message = _a.message, path = _a.path;
+                    if (message === 'success') {
+                        _this.saveFile(path);
+                    }
+                    else {
+                        antd_1.message.success('您已取消保存', 1);
+                    }
                 } }, "\u53E6\u5B58\u4E3A"),
-            react_1["default"].createElement(antd_1.Button, { icon: react_1["default"].createElement(icons_2["default"], { component: Icon_1.UpdateIcon }), type: "primary", style: {
-                    position: 'absolute',
-                    top: 10,
-                    left: 210 - 5
-                }, onClick: function () {
-                } }, "\u66F4\u6362\u5B57\u5178"),
             react_1["default"].createElement(antd_1.Button, { size: 'middle', type: 'primary', icon: react_1["default"].createElement(icons_2["default"], { component: Icon_1.AddIcon }), onClick: function () {
                     tableData.unshift({
                         key: '00',
@@ -189,35 +190,37 @@ var DictionaryWindow = /** @class */ (function (_super) {
                     });
                     // // console.log('data')
                     // this.setState({ inputNameByShow: '0' })
-                    updateDictionaryData(__spreadArrays(tableData), path);
+                    updateDictionaryData(__spreadArrays(tableData));
+                    modifyLabelOfDictionaryData(label, __spreadArrays(tableData));
                 }, style: {
                     position: 'absolute',
                     top: 10,
-                    left: 320
+                    left: 120
                 } }, "\u589E\u52A0\u5B57\u5178")));
     };
     DictionaryWindow.prototype.componentDidMount = function () {
         // 
     };
     DictionaryWindow.prototype.saveFile = function (path) {
-        // const { tableData, updateDictionaryData } = this.props
-        // const configData = [{
-        //     name: '字典',
-        //     data: [
-        //         ['标签', '全称', '别名']
-        //     ]
-        // }]
-        // tableData.forEach((value) => {
-        //     configData[0]['data'].push([
-        //         value['label'], value['name'], ...value['abbreviations']
-        //     ])
-        // })
-        // const buffer = (window as any).xlsx.build(configData);
-        // (window as any).fs.writeFile(path, buffer, (err: any) => {
-        //   if (err) {
-        //   }
-        //   updateDictionaryData(tableData, path)
-        // })
+        var tableData = this.props.tableData;
+        var configData = [{
+                name: '字典',
+                data: [
+                    ['标签', '全称', '别名']
+                ]
+            }];
+        tableData.forEach(function (value) {
+            configData[0]['data'].push(__spreadArrays([
+                value['label'], value['name']
+            ], value['abbreviations']));
+        });
+        var buffer = window.xlsx.build(configData);
+        window.fs.writeFile(path, buffer, function (err) {
+            if (err) {
+            }
+            // updateDictionaryData(tableData)
+            antd_1.message.success('您的文件已成功保存', 1);
+        });
     };
     return DictionaryWindow;
 }(react_1.Component));
@@ -227,6 +230,7 @@ var mapStateToProps = function (state, ownProps) {
     return __assign(__assign({}, ownProps), DictionaryWindow);
 };
 var mapDispatchToProps = {
-    updateDictionaryData: action_1.updateDictionaryData
+    updateDictionaryData: action_1.updateDictionaryData,
+    modifyLabelOfDictionaryData: action_1.modifyLabelOfDictionaryData
 };
 exports["default"] = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(DictionaryWindow);

@@ -1,15 +1,16 @@
 import { PlusOutlined, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Table, Input, Tag, Button, Modal } from 'antd';
+import { Table, Input, Tag, Button, Modal, message as Message } from 'antd';
 import React, { Component } from 'react';
 import Icon from '@ant-design/icons';
-import { SAVE_DICTIONARY_DATA, UPLOAD_DICTIONARY_DATA } from '../types/ipc';
-import { AddIcon, SaveIcon, UpdateIcon } from './Icon'
+import { SAVE_DICTIONARY_DATA } from '../types/ipc';
+import { AddIcon, SaveIcon } from './Icon'
 import { connect } from 'react-redux';
-import { updateDictionaryData } from '../action'
+import { modifyLabelOfDictionaryData, updateDictionaryData } from '../action'
 import { DictionaryWindowStoreType, StoreType, TableDataType } from '../types/propsTypes';
 
 interface DictionaryWindowProps extends DictionaryWindowStoreType {
   updateDictionaryData: typeof updateDictionaryData,
+  modifyLabelOfDictionaryData: typeof modifyLabelOfDictionaryData,
   match: any
 }
 interface DictionaryWindowState {
@@ -20,9 +21,9 @@ interface DictionaryWindowState {
   path: string
 }
 
+// console.log((window as any));
 
-// const { ipcRenderer } = (window as any).electron
-
+const { ipcRenderer } = (window as any).electron
 
 class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindowState>{
   private nameInput: any
@@ -42,11 +43,15 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
     const { Column } = Table;
     // const { ipcRenderer } = (window as any).electron
     const { pageSize, inputNameByShow, inputVisibleName } = this.state
-    const { tableData, path, updateDictionaryData } = this.props
-    // console.log(path)
+    const { tableData, updateDictionaryData, modifyLabelOfDictionaryData } = this.props
+    // console.log(tableData)
     tableData.forEach((value: { name: string; label: string; key?: string | undefined; abbreviations: string[]; }, index: number) => {
       value['key'] = '' + index
     })
+    let label: string = ''
+    if (tableData.length) {
+      label = tableData[0]['label']
+    }
     // console.log('object');
     return (
       <div style={{
@@ -98,7 +103,8 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                           this.setState({ inputNameByShow: '' })
                           if (!e.target.value) return;
                           tableData[i]['name'] = e.target.value
-                          updateDictionaryData(tableData, path)
+                          updateDictionaryData(tableData)
+                          modifyLabelOfDictionaryData(label, tableData)
                           // this.setState({ tableData })
                         }
                       }
@@ -107,7 +113,8 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                           this.setState({ inputNameByShow: '' })
                           if (!(e.target as any).value) return;
                           tableData[i]['name'] = (e.target as any).value
-                          updateDictionaryData(tableData, path)
+                          updateDictionaryData(tableData)
+                          modifyLabelOfDictionaryData(label, tableData)
                           // this.setState({ tableData })
                         }
                       }
@@ -136,7 +143,9 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                           e.preventDefault()
                           const newNames: Array<string> = abbreviations.filter((name: string) => name !== abbreviation)
                           tableData[i]['abbreviations'] = [...newNames]
-                          updateDictionaryData([...tableData], path)
+                          updateDictionaryData([...tableData])
+                          modifyLabelOfDictionaryData(label, [...tableData])
+
                           // this.setState({ tableData })
                         }
                       }>
@@ -161,7 +170,9 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                             this.setState({ inputVisibleName: '' })
                             if (!e.target.value) return;
                             tableData[parseInt(record['key'])]['abbreviations'].push(e.target.value)
-                            updateDictionaryData(tableData, path)
+                            updateDictionaryData(tableData)
+                            modifyLabelOfDictionaryData(label, [...tableData])
+
                             // this.setState({ tableData })
                           }
                         }
@@ -170,7 +181,9 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                             this.setState({ inputVisibleName: '' })
                             if (!(e.target as any).value) return;
                             tableData[i]['abbreviations'].push((e.target as any).value)
-                            updateDictionaryData(tableData, path)
+                            updateDictionaryData(tableData)
+                            modifyLabelOfDictionaryData(label, [...tableData])
+
                             // this.setState({ tableData })
                           }
                         }
@@ -207,7 +220,9 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
                         cancelText: '取消',
                         onOk: () => {
                           tableData.splice(i, 1)
-                          updateDictionaryData([...tableData], path)
+                          updateDictionaryData([...tableData])
+                          modifyLabelOfDictionaryData(label, [...tableData])
+
                           // this.setState({ tableData: [...tableData] })
                         }
                       });
@@ -224,44 +239,31 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
           <Icon component={SaveIcon} />
         } style={{
           position: 'absolute',
-          top: 10
-        }} onClick={
-          () => {
-            // this.saveFile(path)
-          }
-        }>
-          保存
-        </Button>
-        <Button type="primary" size='middle' icon={
-          <Icon component={SaveIcon} />
-        } style={{
-          position: 'absolute',
           top: 10,
-          left: 110 - 5
         }} onClick={
           () => {
-            // const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
-            // if (message === 'success') {
-            //   this.saveFile(path)
-            // } else {
-
-            // }
+            const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
+            if (message === 'success') {
+              this.saveFile(path)
+            } else {
+              Message.success('您已取消保存', 1)
+            }
           }
         }>
           另存为
         </Button>
-        <Button icon={<Icon component={UpdateIcon} />} type="primary"
+        {/* <Button icon={<Icon component={UpdateIcon} />} type="primary"
           style={{
             position: 'absolute',
             top: 10,
-            left: 210 - 5
+            left: 200 - 5
           }}
           onClick={
             () => {
             }
           }>
           更换字典
-        </Button>
+        </Button> */}
         <Button size='middle' type='primary' icon={<Icon component={AddIcon} />} onClick={
             () => {
               tableData.unshift({
@@ -272,12 +274,14 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
               })
               // // console.log('data')
               // this.setState({ inputNameByShow: '0' })
-              updateDictionaryData([...tableData], path)
+              updateDictionaryData([...tableData])
+              modifyLabelOfDictionaryData(label, [...tableData])
+
             }
           } style={{
             position: 'absolute',
             top: 10,
-            left: 320
+            left: 120
           }}>
             增加字典
           </Button>
@@ -291,25 +295,26 @@ class DictionaryWindow extends Component<DictionaryWindowProps, DictionaryWindow
   }
 
   private saveFile(path: string) : void {
-    // const { tableData, updateDictionaryData } = this.props
-    // const configData = [{
-    //     name: '字典',
-    //     data: [
-    //         ['标签', '全称', '别名']
-    //     ]
-    // }]
-    // tableData.forEach((value) => {
-    //     configData[0]['data'].push([
-    //         value['label'], value['name'], ...value['abbreviations']
-    //     ])
-    // })
-    // const buffer = (window as any).xlsx.build(configData);
-    // (window as any).fs.writeFile(path, buffer, (err: any) => {
-    //   if (err) {
+    const { tableData } = this.props
+    const configData = [{
+        name: '字典',
+        data: [
+            ['标签', '全称', '别名']
+        ]
+    }]
+    tableData.forEach((value) => {  
+        configData[0]['data'].push([
+            value['label'], value['name'], ...value['abbreviations']
+        ])
+    })
+    const buffer = (window as any).xlsx.build(configData);
+    (window as any).fs.writeFile(path, buffer, (err: any) => {
+      if (err) {
 
-    //   }
-    //   updateDictionaryData(tableData, path)
-    // })
+      }
+      // updateDictionaryData(tableData)
+      Message.success('您的文件已成功保存', 1)
+    })
 
   }
 
@@ -325,7 +330,8 @@ const mapStateToProps = (state:StoreType, ownProps?: any) => {
 }
 
 const mapDispatchToProps = {
-  updateDictionaryData
+  updateDictionaryData,
+  modifyLabelOfDictionaryData,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DictionaryWindow);

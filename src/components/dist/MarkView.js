@@ -38,6 +38,8 @@ var icons_1 = require("@ant-design/icons");
 // import $ from 'jquery'
 var react_color_1 = require("react-color");
 var Icon_1 = require("./Icon");
+var react_redux_1 = require("react-redux");
+var action_1 = require("../action");
 var MarkView = /** @class */ (function (_super) {
     __extends(MarkView, _super);
     function MarkView(props) {
@@ -78,10 +80,8 @@ var MarkView = /** @class */ (function (_super) {
                         width: '100%',
                         textAlign: 'center'
                     } }, "\u6587\u672C"),
-                dataIndex: 'text',
+                dataIndex: 'textArr',
                 key: 'text',
-                // width: '70%',
-                // ellipsis: true,
                 align: 'left',
                 render: function (text, record, index) {
                     var nameToColor = _this.state.nameToColor;
@@ -89,7 +89,9 @@ var MarkView = /** @class */ (function (_super) {
                             var _a, _b, _c, _d;
                             // console.log(getSelection()?.toString())
                             // console.log(text[this.startIndex]);
-                            var data = _this.state.data;
+                            // console.log(index);
+                            // return;
+                            var _e = _this.props, data = _e.data, current = _e.current, updateMarkTextData = _e.updateMarkTextData;
                             var start = Math.min(_this.startIndex, _this.endIndex);
                             var end = Math.max(_this.startIndex, _this.endIndex);
                             // console.log(text.slice(start, end + 1).join(''))
@@ -97,11 +99,12 @@ var MarkView = /** @class */ (function (_super) {
                                 var textBySelect = (_b = getSelection()) === null || _b === void 0 ? void 0 : _b.toString();
                                 start = start + text.slice(start, end + 1).join('').indexOf(textBySelect);
                                 end = start + textBySelect.length - 1;
-                                data[index]['text'].splice(start, end + 1 - start);
-                                data[index]['text'].splice(start, 0, (_c = getSelection()) === null || _c === void 0 ? void 0 : _c.toString());
+                                data[current * 10 - 10 + index]['textArr'].splice(start, end + 1 - start);
+                                data[current * 10 - 10 + index]['textArr'].splice(start, 0, (_c = getSelection()) === null || _c === void 0 ? void 0 : _c.toString());
                                 // console.log(data[index]['text']);
                                 nameToColor[textBySelect] = 'blue';
-                                _this.setState({ data: __spreadArrays(data), nameToColor: nameToColor });
+                                _this.setState({ nameToColor: nameToColor });
+                                updateMarkTextData(data);
                             }
                             // if ()
                             (_d = getSelection()) === null || _d === void 0 ? void 0 : _d.removeAllRanges();
@@ -133,15 +136,16 @@ var MarkView = /** @class */ (function (_super) {
                                     marginLeft: '5px'
                                 }, onClose: function () {
                                     var _a;
-                                    var data = _this.state.data;
+                                    var _b = _this.props, data = _b.data, current = _b.current, updateMarkTextData = _b.updateMarkTextData;
                                     // console.log(data[index]['text'], i);
                                     var v = value;
-                                    data[index]['text'].splice(i, 1);
+                                    data[current * 10 - 10 + index]['textArr'].splice(i, 1);
                                     console.log(v, v.split(''));
-                                    (_a = data[index]['text']).splice.apply(_a, __spreadArrays([i, 0], v.split('')));
+                                    (_a = data[current * 10 - 10 + index]['textArr']).splice.apply(_a, __spreadArrays([i, 0], v.split('')));
                                     // console.log(data[index]['text']);
                                     delete nameToColor[value];
-                                    _this.setState({ data: __spreadArrays(data), nameToColor: nameToColor });
+                                    _this.setState({ nameToColor: nameToColor });
+                                    updateMarkTextData(data);
                                 } }, value));
                         }
                     })));
@@ -153,14 +157,13 @@ var MarkView = /** @class */ (function (_super) {
     MarkView.prototype.render = function () {
         var _this = this;
         // const dataStr = 
-        var _a = this.state, data = _a.data, labels = _a.labels, inputVisible = _a.inputVisible, labelSettingConfig = _a.labelSettingConfig, popoverVisibleName = _a.popoverVisibleName, nameToColor = _a.nameToColor;
+        var _a = this.state, labels = _a.labels, inputVisible = _a.inputVisible, labelSettingConfig = _a.labelSettingConfig, popoverVisibleName = _a.popoverVisibleName;
+        var _b = this.props, history = _b.history, current = _b.current, data = _b.data, updateTextTablePage = _b.updateTextTablePage;
         // if ()
-        console.log(data, nameToColor);
+        // console.log(data);
         return (react_1["default"].createElement("div", { style: {
                 width: '100%',
-                height: '500px',
-                // backgroundColor: 'red'
-                borderBottom: '1px solid black'
+                height: '500px'
             } },
             react_1["default"].createElement("div", { style: {
                     width: '100%',
@@ -278,7 +281,22 @@ var MarkView = /** @class */ (function (_super) {
                         } },
                         react_1["default"].createElement(icons_1.PlusOutlined, null),
                         " \u6DFB\u52A0\u6807\u7B7E")),
-            react_1["default"].createElement(antd_1.Table, { columns: this.columns, dataSource: data, size: 'small', scroll: { y: 380 } })));
+            react_1["default"].createElement(antd_1.Table, { columns: this.columns, dataSource: data, size: 'small', scroll: { y: 380 }, pagination: {
+                    pageSize: 10,
+                    current: current,
+                    simple: true,
+                    position: ['bottomRight'],
+                    // showSizeChanger: true,
+                    onChange: function (page) {
+                        updateTextTablePage(page);
+                        // this.setState({ pageSize: (pageSize as number) })
+                    }
+                } }),
+            react_1["default"].createElement(antd_1.Button, { type: 'primary', style: {
+                // float: 'left'
+                }, onClick: function () {
+                    history.push('/texts');
+                } }, "\u8FD4\u56DE")));
     };
     MarkView.prototype.componentDidMount = function () {
         var _this = this;
@@ -287,6 +305,13 @@ var MarkView = /** @class */ (function (_super) {
             ["富", "动", "2", "4", "煤", "（", "0", ".", "5", "3", "%", "上", "2", "A", "仓", "，", "富", "动", "2", "4", "煤", "（", "0", ".", "8", "0", "%", "）", "上", "2", "C", "D", "仓", "，", "中", "水", "澳", "优", "（", "0", ".", "4", "7", "%", "）", "上", "1", "B", "D", "仓", "，", "优", "混", "煤", "（", "0", ".", "8", "6", "%", "）", "上", "#", "1", "炉", "其", "余", "仓", "，", "优", "混", "煤", "（", "1", ".", "3", "4", "%", "）", "上", "#", "2", "炉", "其", "余", "仓", "。"],
             ["2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "二", "次", "电", "压", "突", "降", "为", "零", "（", "加", "强", "振", "打", "和", "排", "灰", "无", "效", "）", "，", "联", "系", "维", "护", "处", "理", "。", "0", "8", ":", "3", "0", " ", "2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "拉", "弧", "保", "护", "跳", "闸", "。"],
             ["今", "日", "值", "班", "：", "公", "司", "领", "导", "-", "-", "-", "周", "董", "，", "运", "行", "部", "-", "-", "-", "黄", "士", "雷", "，", "维", "护", "部", "-", "-", "-", "郑", "晓", "，", "燃", "料", "部", "-", "-", "-", "潘", "巨", "元", "，", "设", "备", "部", "-", "-", "-", "屠", "海", "彪", "，", "安", "健", "环", "-", "-", "-", "王", "爱", "民", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+            ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
             ["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
         ].forEach(function (value, index) {
             data.push({
@@ -314,4 +339,13 @@ var MarkView = /** @class */ (function (_super) {
     };
     return MarkView;
 }(react_1.Component));
-exports["default"] = MarkView;
+var mapStateToProps = function (state, ownProps) {
+    var MarkView = state.MarkView;
+    // console.log(Header)
+    return __assign(__assign({}, ownProps), MarkView);
+};
+var mapDispatchToProps = {
+    updateTextTablePage: action_1.updateTextTablePage,
+    updateMarkTextData: action_1.updateMarkTextData
+};
+exports["default"] = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(MarkView);

@@ -3,30 +3,25 @@ import 'antd/dist/antd.css';
 import { Button, Modal, Table, Input, message } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
-import { AddIcon, LabelIcon, SaveIcon, UpdateIcon } from './Icon';
-import { UPLOAD_TEXTS_DATA } from '../types/ipc';
+import { AddIcon, CircleIcon, LabelIcon, SaveIcon, UpdateIcon } from './Icon';
+import { SAVE_TEXTS_DATA } from '../types/ipc';
 import { connect } from 'react-redux';
 import { StoreType, TextWindowStoreType } from '../types/propsTypes';
-import { updateTextsData } from '../action';
+import { updateIsSave, updateMarkTextData, updateTextsData, updateTextTablePage } from '../action';
 
 interface TextWindowProps extends TextWindowStoreType {
+  history: any,
   updateTextsData: typeof updateTextsData,
+  updateIsSave: typeof updateIsSave,
+  updateTextTablePage: typeof updateTextTablePage,
+  updateMarkTextData: typeof updateMarkTextData,
 }
 interface TextWindowState {
   editKey: string,
-  data: Array<{
-    key?: string,
-    text: string,
-    label: Array<{
-      start: number,
-      end: number,
-      label: string
-    }>
-  }>,
   pageSize: number,
 }
 
-// const { ipcRenderer } = (window as any).electron
+const { ipcRenderer } = (window as any).electron
 
 
 class TextWindow extends Component<TextWindowProps, TextWindowState>{
@@ -35,34 +30,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
     super(props)
     this.state = {
       editKey: '',
-      data: [
-        {
-          key: '1',
-          text: 'dsoajmfosamfosao',
-          label: []
-        }, {
-          key: '2',
-          text: 'gewgvwev',
-          label: []
-        }, {
-          key: '3',
-          text: 'vdscas',
-          label: []
-        }, {
-          key: '1',
-          text: 'dsoajmfosamfosao',
-          label: []
-        }, {
-          key: '4',
-          text: 'dsoajmfosamfosao',
-          label: []
-        }, {
-          key: '5',
-          text: 'dsoajmfosamfosao',
-          label: []
-        },
-      ],
-      pageSize: 5
+      pageSize: 10
     }
     this.columns = [
       {
@@ -74,7 +42,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
         </div>,
         dataIndex: 'text',
         key: 'text',
-        width: '70%',
+        width: '82%',
         // ellipsis: true,
         align: 'left',
         render: (text: string, record: { key?: string, text: string, label: any }, index: number) => {
@@ -89,7 +57,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
               onChange={
                 (e) => {
                   const newText = e.target.value
-                  const { data: originalData, path, updateTextsData } = this.props
+                  const { data: originalData, path, updateTextsData, updateIsSave } = this.props
                   const data = originalData.map((value: { key?: string; text: string; label: any; }) => {
                     if (value['key'] !== record['key']) return value;
                     return {
@@ -98,6 +66,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
                     }
                   })
                   updateTextsData(data, path)
+                  updateIsSave(false)
                 }
               }
               autoSize
@@ -119,21 +88,10 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
             }}>
               {this.state.editKey === record['key'] ? '保存' : '编辑'}
             </Button>
-            <Button size='small' type='primary' 
-              icon={<Icon component={LabelIcon} />}
-              onClick={
-                () => {
-                  
-                }
-              } style={{
-              // float: 'right',
-              marginRight: '10px'
-            }}>
-              标注
-            </Button>
+            
             <Button size='small' type='primary' onClick={
               () => {
-                const { data, path, updateTextsData } = this.props
+                const { data, path, updateTextsData, updateIsSave } = this.props
                 Modal.confirm({
                   title: '警告',
                   icon: <ExclamationCircleOutlined />,
@@ -142,6 +100,8 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
                   cancelText: '取消',
                   onOk: () => {
                     updateTextsData(data.filter((value: any, i: number) => i !== index), path)
+                    // console.log('object');
+                    updateIsSave(false)
                   }
                 });
               }
@@ -151,7 +111,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
           </React.Fragment>
 
         ),
-        width: '30%',
+        width: '18%',
         align: 'center'
       }
     ]
@@ -159,10 +119,11 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
 
   public render(): JSX.Element {
     const { pageSize } = this.state
-    const { data, path, updateTextsData } = this.props
+    const { data, path, isSave, current, history, updateTextsData, updateTextTablePage, updateMarkTextData } = this.props
     data.forEach((value: { key?: string; text: string; label: any; }, index: number,) => {
       value['key'] = '' + index
     })
+    // console.log(isSave);
     return (
       <div style={{
         width: '100%',
@@ -172,44 +133,48 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
         position: 'relative'
       }}>
         <React.Fragment>
-
           <Table columns={this.columns} dataSource={data} size='small'
-            scroll={{ y: 380 }}
+            scroll={{ y: 510 }}
             pagination={{
               pageSize,
+              current,
+              simple: true,
               position: ['topRight'],
-              showSizeChanger: true,
-              onChange: (page: number, pageSize?: number) => {
-                this.setState({ pageSize: (pageSize as number) })
+              // showSizeChanger: true,
+              onChange: (page: number) => {
+                updateTextTablePage(page)
+                // this.setState({ pageSize: (pageSize as number) })
               }
             }}
           />
           <Button type="primary" size='middle' icon={
-            <Icon component={SaveIcon} />
+            <Icon component={isSave ? SaveIcon : CircleIcon} />
           } style={{
             position: 'absolute',
             top: 10
           }} onClick={
             () => {
               this.saveFile(path)
+              // updateIsSave(true)
             }
           }>
             保存
           </Button>
           <Button type="primary" size='middle' icon={
-            <Icon component={SaveIcon} />
+            <Icon component={isSave ? SaveIcon : CircleIcon} />
           } style={{
             position: 'absolute',
             top: 10,
             left: 110 - 5
           }} onClick={
             () => {
-              // const { message, path } = ipcRenderer.sendSync(SAVE_DICTIONARY_DATA)
-              // if (message === 'success') {
-              //   this.saveFile(path)
-              // } else {
-
-              // }
+              const { message: msg, path } = ipcRenderer.sendSync(SAVE_TEXTS_DATA)
+              if (msg === 'success') {
+                // console.log(path);
+                this.saveFile(path)
+              } else {
+                message.success('您已取消保存', 1)
+              }
             }
           }>
             另存为
@@ -225,7 +190,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
                 // this.uploadDictionaryData()
               }
             }>
-            更换字典
+            更换文本
           </Button>
           <Button size='middle' type='primary' icon={<Icon component={AddIcon} />} onClick={
             () => {
@@ -245,7 +210,24 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
           }}>
             增加文本
           </Button>
-          
+          <Button  type='primary' 
+              icon={<Icon component={LabelIcon} />}
+              onClick={
+                () => {
+                  // updateIsSave(false)
+                  updateMarkTextData(data.map((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => ({
+                    ...value,
+                    textArr: value['text'].split('')
+                  })))
+                  history.push('/mark')
+                }
+              } style={{
+                position: 'absolute',
+                top: 10,
+                left: 435
+            }}>
+              标注
+            </Button>
         </React.Fragment>
       </div>
     )
@@ -258,19 +240,21 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
 
 
   private saveFile(path: string) : void {
-    // const { data, updateTextsData } = this.props;
-    // let dataString = ''
-    // data.forEach((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => {
-    //   dataString += (value['text'] + '\r\n')
-    // })
-    // const fs = (window as any).fs;
-    // fs.writeFile(path, dataString, (err: any) => {
-    //   if (err) {
+    const { data, updateTextsData, updateIsSave } = this.props;
+    let dataString = ''
+    data.forEach((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => {
+      dataString += (value['text'] + '\r\n')
+    })
+    const fs = (window as any).fs;
+    fs.writeFile(path, dataString, (err: any) => {
+      if (err) {
 
-    //   }
-    //   updateTextsData(data, path)
-    //   // console.log('success')
-    // })
+      }
+      updateTextsData(data, path)
+      message.success('您已成功保存', 1)
+      updateIsSave(true)
+      // console.log('success')
+    })
   }
 
 
@@ -286,7 +270,10 @@ const mapStateToProps = (state: StoreType, ownProps?: any) => {
 }
 
 const mapDispatchToProps = {
-  updateTextsData
+  updateTextsData,
+  updateIsSave,
+  updateTextTablePage,
+  updateMarkTextData
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextWindow);

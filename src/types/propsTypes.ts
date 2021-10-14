@@ -5,11 +5,16 @@ export interface StoreType {
     Main: MainStoreType,
     DictionaryWindow: DictionaryWindowStoreType,
     TextWindow: TextWindowStoreType,
+    MarkView: MarkViewStoreType
 }
 
 
 export interface MainStoreType {
-    dictionaryList: Array<[name:string, path:string]>,
+    dictionaryData: {
+        [label: string]: TableDataType
+    },
+    labelByShow: string,
+    isSave: boolean,
 }
 
 export interface DictionaryWindowStoreType {
@@ -19,7 +24,14 @@ export interface DictionaryWindowStoreType {
 
 export interface TextWindowStoreType {
     data: TextsDataType,
-    path: string
+    path: string,
+    isSave: boolean,
+    current: number,
+}
+
+export interface MarkViewStoreType {
+    data: MarkTextsDataType,
+    current: number,
 }
 
 /**
@@ -43,4 +55,18 @@ export type TextsDataType = Array<{
         end: number,
         label: string
     }>
+}>
+
+/**
+ * 待标注的语料数据
+ */
+export type MarkTextsDataType = Array<{
+    key?: string,
+    text: string,
+    label: Array<{
+        start: number,
+        end: number,
+        label: string
+    }>,
+    textArr: Array<string>
 }>

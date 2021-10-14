@@ -1,26 +1,45 @@
 import {
     UPDATE_DICTIONARY_DATA,
     UPDATE_TEXTS_DATA,
-    UPLOAD_NEW_DICTIONARY_DATA
+    UPDATE_ALL_DICTIONARY_DATA,
+    UPDATE_LABEL_BY_SHOW,
+    MODIFY_LABEL_OF_DICTIONARY_DATA,
+    UPDATE_IS_SAVE,
+    UPDATE_TEXT_TABLE_PAGE,
+    UPDATE_MARK_TEXT_DATA
 } from '../types/actionTypes'
-import { TableDataType, TextsDataType } from '../types/propsTypes'
+import { MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
 
 /**
- * 上传新的字典数据
+ * 更新所有的字典数据
  */
-export const uploadNewDictionaryData = (name: string, path: string) => ({
-    type: UPLOAD_NEW_DICTIONARY_DATA,
-    name,
-    path
+export const updateAllDictionaryData = (dictionaryData: { [label: string]: TableDataType }) => ({
+    type: UPDATE_ALL_DICTIONARY_DATA,
+    dictionaryData
+})
+/**
+ * 更新展示的标签
+ */
+export const updateLabelByShow = (labelByShow: string) => ({
+    type: UPDATE_LABEL_BY_SHOW,
+    labelByShow
+})
+
+/**
+ * 修改对应标签的字典数据
+ */
+export const modifyLabelOfDictionaryData = (label: string, tableData: TableDataType) => ({
+    type: MODIFY_LABEL_OF_DICTIONARY_DATA,
+    label,
+    tableData
 })
 
 /**
  * 更新字典数据
  */
-export const updateDictionaryData = (tableData: TableDataType, path: string) => ({
+export const updateDictionaryData = (tableData: TableDataType) => ({
     type: UPDATE_DICTIONARY_DATA,
-    tableData,
-    path
+    tableData
 })
 
 /**
@@ -33,6 +52,25 @@ export const updateTextsData = (data: TextsDataType, path: string) => ({
 })
 
 /**
- * 
+ * 更改语料数据的保存状态
  */
-// export const updateDictionaryDataPath
+export const updateIsSave = (isSave: boolean) => ({
+    type: UPDATE_IS_SAVE,
+    isSave
+})
+
+/**
+ * 更新语料表格的页码
+ */
+export const updateTextTablePage = (current: number) => ({
+    type: UPDATE_TEXT_TABLE_PAGE,
+    current
+})
+
+/**
+ * 更新标注的文本数据
+ */
+export const updateMarkTextData = (data:MarkTextsDataType) => ({
+    type: UPDATE_MARK_TEXT_DATA,
+    data
+})

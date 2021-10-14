@@ -93,43 +93,37 @@ exports.newIpcListener = (mainWindow) => {
             if (!res.canceled) {
                 event.returnValue = res.filePaths[0]
             }
+            event.returnValue = ''
         })
     })
 
     /**
      * 保存语料数据
      */
-    ipcMain.on(SAVE_TEXTS_DATA, (event, data) => {
+    ipcMain.on(SAVE_TEXTS_DATA, (event) => {
         // console.log(data);
         const saveFilePromise = dialog.showSaveDialog({
             title: '保存语料数据',
-            defaultPath: __dirname + '/data' + '/texts.json',
+            defaultPath: __dirname + '/data' + '/texts.txt',
             filters: [
                 {
-                    name: 'json', extensions: ['json']
+                    name: 'txt', extensions: ['txt']
                 }
             ],
             properties: ['dontAddToRecent']
         })
         saveFilePromise.then((res) => {
             if (!res.canceled) {
-                // console.log(res)
-                return new Promise((resolve, reject) => {
-                    fs.writeFile(res.filePath, JSON.stringify(data), 'utf8', (err) => {
-                        if (!err) {
-                            resolve('success')
-                        }
-                        reject('fail')
-                    })
-                })
+                event.returnValue = {
+                    message: 'success',
+                    path: res.filePath
+                }
             } else {
-                return new Promise((resolve, reject) => {
-                    resolve('cancel')
-                })
+                event.returnValue = {
+                    message: 'cancel',
+                    path: ''
+                }
             }
-        }).then(result => {
-            // console.log(data)
-            event.reply(SAVE_TEXTS_DATA_RESULT, result)
         })
     })
     /**

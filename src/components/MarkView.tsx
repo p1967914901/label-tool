@@ -5,12 +5,17 @@ import Icon, { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons
 // import $ from 'jquery'
 import { ColorResult, SketchPicker } from 'react-color';
 import { SettingIcon } from './Icon';
+import { connect } from 'react-redux';
+import { MarkViewStoreType, StoreType } from '../types/propsTypes';
+import { updateMarkTextData, updateTextTablePage } from '../action';
 
 
 
 
-interface MarkViewProps {
-
+interface MarkViewProps extends MarkViewStoreType {
+	history: any,
+	updateTextTablePage: typeof updateTextTablePage,
+	updateMarkTextData: typeof updateMarkTextData,
 }
 interface MarkViewState {
 	data: Array<{
@@ -82,10 +87,8 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 				}}>
 					文本
 				</div>,
-				dataIndex: 'text',
+				dataIndex: 'textArr',
 				key: 'text',
-				// width: '70%',
-				// ellipsis: true,
 				align: 'left',
 				render: (text: Array<string>, record: { key?: string, text: Array<string> }, index: number) => {
 					const { nameToColor } = this.state;
@@ -94,29 +97,31 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 							() => {
 								// console.log(getSelection()?.toString())
 								// console.log(text[this.startIndex]);
-								const { data } = this.state
+								// console.log(index);
+								// return;
+								const { data, current, updateMarkTextData } = this.props
 								let start = Math.min(this.startIndex, this.endIndex)
 								let end = Math.max(this.startIndex, this.endIndex)
 								// console.log(text.slice(start, end + 1).join(''))
-								if (text.slice(start, end + 1).join('').includes(getSelection()?.toString() as string) ) {
+								if (text.slice(start, end + 1).join('').includes(getSelection()?.toString() as string)) {
 									const textBySelect: string = getSelection()?.toString() as string;
 									start = start + text.slice(start, end + 1).join('').indexOf(textBySelect);
 									end = start + textBySelect.length - 1;
-									data[index]['text'].splice(start, end + 1 - start)
-									data[index]['text'].splice(start, 0, getSelection()?.toString() as string)
+									data[current * 10 - 10 + index]['textArr'].splice(start, end + 1 - start)
+									data[current * 10 - 10 + index]['textArr'].splice(start, 0, getSelection()?.toString() as string)
 									// console.log(data[index]['text']);
 									nameToColor[textBySelect] = 'blue';
-									this.setState({ data: [...data], nameToColor })
+									this.setState({ nameToColor })
+									updateMarkTextData(data)
 								}
 								// if ()
-
 								getSelection()?.removeAllRanges()
 								this.startIndex = this.endIndex = -1
 							}
 						}>
 							{
 								text.map((value: string, i: number) => {
-									if (!value) return '' ;
+									if (!value) return '';
 									if (value.length <= 1 && !(value in nameToColor)) {
 										return (
 											<div key={i} style={{
@@ -138,7 +143,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 													// if (this.startIndex === this.endIndex && getSelection()?.toString() === value) {
 													//     console.log(value)
 													// }
-													
+
 													// console.log(getSelection()?.toString());
 													// getSelection()?.removeAllRanges()
 												}
@@ -148,27 +153,28 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 										)
 									} else {
 										return (
-											<Tag key={i} color={ nameToColor[value] } closable 
-											icon={<Icon component={SettingIcon} onClick={
-												() => {
-													
-												}
-											} />}
-											style={{
-												marginLeft: '5px'
-											}} onClose={
-												() => {
-													const { data } = this.state
-													// console.log(data[index]['text'], i);
-													const v = value;
-													data[index]['text'].splice(i, 1)
-													console.log(v, v.split(''));
-													data[index]['text'].splice(i, 0, ...v.split(''))
-													// console.log(data[index]['text']);
-													delete nameToColor[value]
-													this.setState({ data: [...data], nameToColor })
-												}
-											}>
+											<Tag key={i} color={nameToColor[value]} closable
+												icon={<Icon component={SettingIcon} onClick={
+													() => {
+
+													}
+												} />}
+												style={{
+													marginLeft: '5px'
+												}} onClose={
+													() => {
+														const { data, current, updateMarkTextData } = this.props
+														// console.log(data[index]['text'], i);
+														const v = value;
+														data[current * 10 - 10 + index]['textArr'].splice(i, 1)
+														console.log(v, v.split(''));
+														data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...v.split(''))
+														// console.log(data[index]['text']);
+														delete nameToColor[value]
+														this.setState({ nameToColor })
+														updateMarkTextData(data)
+													}
+												}>
 												{value}
 											</Tag>
 										)
@@ -185,21 +191,23 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 
 	public render(): JSX.Element {
 		// const dataStr = 
-		const { data, labels, inputVisible, labelSettingConfig, popoverVisibleName, nameToColor } = this.state
+		const { labels, inputVisible, labelSettingConfig, popoverVisibleName } = this.state
+		const { history, current, data, updateTextTablePage } = this.props
 		// if ()
-		console.log(data, nameToColor);
+		// console.log(data);
 		return (
 			<div style={{
 				width: '100%',
 				height: '500px',
 				// backgroundColor: 'red'
-				borderBottom: '1px solid black'
+				// borderBottom: '1px solid black'
 			}}>
-
+				
 				<div style={{
 					width: '100%',
 					height: '50px',
 					padding: '10px',//rgb(255, 255, 255)
+					// backgroundColor: 'red'
 					// position: 'absolute'
 				}}>
 					{
@@ -376,9 +384,29 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 						</Tag>
 					}
 				</div>
-				<Table columns={this.columns} dataSource={data} size='small'
+				
+				<Table columns={this.columns} dataSource={data} size='small' 
 					scroll={{ y: 380 }}
+					pagination={{
+						pageSize: 10,
+						current,
+						simple: true,
+						position: ['bottomRight'],
+						// showSizeChanger: true,
+						onChange: (page: number) => {
+							updateTextTablePage(page)
+							// this.setState({ pageSize: (pageSize as number) })
+						}
+					}}
 				/>
+				<Button type='primary' style={{
+					// float: 'left'
+					
+				}} onClick={
+					() => {
+						history.push('/texts')
+					}
+				}>返回</Button>
 			</div>
 		)
 	}
@@ -393,7 +421,14 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 			["2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "二", "次", "电", "压", "突", "降", "为", "零", "（", "加", "强", "振", "打", "和", "排", "灰", "无", "效", "）", "，", "联", "系", "维", "护", "处", "理", "。", "0", "8", ":", "3", "0", " ", "2", "A", "0", "5", "电", "场", "高", "频", "电", "源", "拉", "弧", "保", "护", "跳", "闸", "。"],
 			["今", "日", "值", "班", "：", "公", "司", "领", "导", "-", "-", "-", "周", "董", "，", "运", "行", "部", "-", "-", "-", "黄", "士", "雷", "，", "维", "护", "部", "-", "-", "-", "郑", "晓", "，", "燃", "料", "部", "-", "-", "-", "潘", "巨", "元", "，", "设", "备", "部", "-", "-", "-", "屠", "海", "彪", "，", "安", "健", "环", "-", "-", "-", "王", "爱", "民", "。"],
 			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
-			
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+			["2", "B", "磨", "煤", "机", "旋", "转", "分", "离", "器", "电", "机", "冷", "却", "风", "扇", "声", "音", "较", "大", "，", "联", "系", "华", "业", "。"],
+
 		].forEach((value: string[], index: number) => {
 			data.push({
 				key: '' + index,
@@ -404,7 +439,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 		document.addEventListener('keydown', (e) => {
 			if (e.ctrlKey) {
 				const { labels, nameToColor } = this.state
-				for (let i = 0; i < labels.length; i++){
+				for (let i = 0; i < labels.length; i++) {
 					if (labels[i]['key'] === e.key) {
 						for (let name in nameToColor) {
 							if (nameToColor[name] === 'blue') {
@@ -412,13 +447,28 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 							}
 						}
 						this.setState({ nameToColor })
-						break; 
+						break;
 					}
 				}
 			}
 		})
 	}
 
-
 }
-export default MarkView;
+
+const mapStateToProps = (state:StoreType, ownProps?: any) => {
+	const { MarkView } = state
+	// console.log(Header)
+	return {
+			...ownProps,
+			...MarkView,
+	}
+}
+
+const mapDispatchToProps = {
+  updateTextTablePage,
+	updateMarkTextData
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(MarkView);
