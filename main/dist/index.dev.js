@@ -37,20 +37,11 @@ function createWindow() {
     // frame:false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true // webSecurity: false
+      nodeIntegration: true,
+      contextIsolation: false // webSecurity: false
 
     }
-  }); // and load the index.html of the app.
-  // mainWindow.loadFile('../build/index.html')
-  // mainWindow.loadURL(url.format({
-  //     pathname: path.join(__dirname, '../build/index.html'),
-  //     protocol: 'file:',
-  //     slashes: true,
-  //     // hash: "/"
-  // }))
-  // console.log(path.join(__dirname, '../build/index.html'))
-  // mainWindow.loadURL(`file://${path.join(__dirname, '../build/index.html')}`)
-  // mainWindow.loadURL(url.format({
+  }); // mainWindow.loadURL(url.format({
   //     pathname: path.join(__dirname, '../build/index.html'),
   //     protocol: 'file:',
   //     slashes: true
