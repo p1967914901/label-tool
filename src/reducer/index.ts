@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPDATE_ALL_DICTIONARY_DATA, MODIFY_LABEL_OF_DICTIONARY_DATA, UPDATE_IS_SAVE, UPDATE_TEXT_TABLE_PAGE, UPDATE_MARK_TEXT_DATA } from '../types/actionTypes'
+import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPDATE_ALL_DICTIONARY_DATA, MODIFY_LABEL_OF_DICTIONARY_DATA, UPDATE_IS_SAVE, UPDATE_TEXT_TABLE_PAGE, UPDATE_MARK_TEXT_DATA, UPDATE_MARK_RECORD } from '../types/actionTypes'
 import { DictionaryWindowStoreType, MainStoreType, MarkViewStoreType, StoreType, TextWindowStoreType } from '../types/propsTypes'
 
 const initStore:StoreType = {
@@ -21,6 +21,7 @@ const initStore:StoreType = {
     MarkView: {
         data: [],
         current: 1,
+        labelRecord: []
     }
 }
 
@@ -64,7 +65,8 @@ const DictionaryWindowReducer = (state: DictionaryWindowStoreType = initStore.Di
 
 const TextWindowReducer = (state: TextWindowStoreType = initStore.TextWindow, action: any) => {
     if (action.type === UPDATE_TEXTS_DATA) {
-        const { data, path } = action
+        const { data, path: newPath } = action
+        const path = newPath || state.path
         return {
             ...state,
             data,
@@ -90,15 +92,23 @@ const TextWindowReducer = (state: TextWindowStoreType = initStore.TextWindow, ac
 const MarkViewReducer = (state: MarkViewStoreType = initStore.MarkView, action: any) => {
     if (action.type === UPDATE_MARK_TEXT_DATA) {
         const { data } = action
+        const { labelRecord } = state
         return {
             ...state,
-            data
+            data,
+            labelRecord: labelRecord.length === 0 ? data.map((value: any) => []) : labelRecord
         }
     }  else if (action.type === UPDATE_TEXT_TABLE_PAGE) {
         const { current } = action
         return {
             ...state,
             current
+        }
+    } else if (action.type === UPDATE_MARK_RECORD) {
+        const { labelRecord } = action
+        return {
+            ...state,
+            labelRecord
         }
     }
     return state

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-15 15:37:22
+ * @LastEditTime: 2021-10-15 18:59:04
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \label-tool\src\types\actionTypes.ts
+ */
 /**
  * 更新所有的字典数据
  */
@@ -42,3 +50,8 @@ export const UPDATE_TEXT_TABLE_PAGE = 'UPDATE_TEXT_TABLE_PAGE'
  * 更新标注的文本数据
  */
 export const UPDATE_MARK_TEXT_DATA = 'UPDATE_MARK_TEXT_DATA'
+
+/**
+ * 更新标注记录
+ */
+export const UPDATE_MARK_RECORD = 'UPDATE_MARK_RECORD'

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-15 15:37:22
+ * @LastEditTime: 2021-10-15 19:27:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \label-tool\src\types\propsTypes.ts
+ */
 /**
  * 全局 store 类型
  */
@@ -32,6 +40,7 @@ export interface TextWindowStoreType {
 export interface MarkViewStoreType {
     data: MarkTextsDataType,
     current: number,
+    labelRecord: labelRecordType,
 }
 
 /**
@@ -70,3 +79,14 @@ export type MarkTextsDataType = Array<{
     }>,
     textArr: Array<string>
 }>
+
+/**
+ * 标注记录
+ */
+export type labelRecordType = Array<Array<{
+	start: number,
+	end: number,
+	label: string,
+	text: string,
+    color: string
+}>>

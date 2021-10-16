@@ -123,7 +123,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
     data.forEach((value: { key?: string; text: string; label: any; }, index: number,) => {
       value['key'] = '' + index
     })
-    // console.log(isSave);
+    // console.log(data);
     return (
       <div style={{
         width: '100%',
@@ -215,7 +215,7 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
               onClick={
                 () => {
                   // updateIsSave(false)
-                  updateMarkTextData(data.map((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; }) => ({
+                  updateMarkTextData(data.map((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; textArr?: Array<string>}) => ({
                     ...value,
                     textArr: value['text'].split('')
                   })))

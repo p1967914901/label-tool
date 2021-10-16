@@ -6,9 +6,10 @@ import {
     MODIFY_LABEL_OF_DICTIONARY_DATA,
     UPDATE_IS_SAVE,
     UPDATE_TEXT_TABLE_PAGE,
-    UPDATE_MARK_TEXT_DATA
+    UPDATE_MARK_TEXT_DATA,
+    UPDATE_MARK_RECORD
 } from '../types/actionTypes'
-import { MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
+import { labelRecordType, MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
 
 /**
  * 更新所有的字典数据
@@ -73,4 +74,12 @@ export const updateTextTablePage = (current: number) => ({
 export const updateMarkTextData = (data:MarkTextsDataType) => ({
     type: UPDATE_MARK_TEXT_DATA,
     data
+})
+
+/**
+ * 更新标注记录
+ */
+export const updateMarkRecord = (labelRecord: labelRecordType) => ({
+    type: UPDATE_MARK_RECORD,
+    labelRecord
 })
