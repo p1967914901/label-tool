@@ -1,6 +1,25 @@
 import { combineReducers } from 'redux'
-import { UPDATE_DICTIONARY_DATA, UPDATE_TEXTS_DATA, UPDATE_ALL_DICTIONARY_DATA, MODIFY_LABEL_OF_DICTIONARY_DATA, UPDATE_IS_SAVE, UPDATE_TEXT_TABLE_PAGE, UPDATE_MARK_TEXT_DATA, UPDATE_MARK_RECORD } from '../types/actionTypes'
-import { DictionaryWindowStoreType, MainStoreType, MarkViewStoreType, StoreType, TextWindowStoreType } from '../types/propsTypes'
+import { 
+    UPDATE_DICTIONARY_DATA, 
+    UPDATE_TEXTS_DATA, 
+    UPDATE_ALL_DICTIONARY_DATA, 
+    MODIFY_LABEL_OF_DICTIONARY_DATA, 
+    UPDATE_IS_SAVE, 
+    UPDATE_TEXT_TABLE_PAGE, 
+    UPDATE_MARK_TEXT_DATA,
+    SET_LOADING_STATE,
+    IDENTIFY_ENTITY
+} from '../types/actionTypes'
+import { 
+    DictionaryWindowStoreType, 
+    FontObject, 
+    LoadingStoreType, 
+    MainStoreType, 
+    MarkViewStoreType, 
+    StoreType, 
+    TextWindowStoreType
+} from '../types/propsTypes'
+
 
 const initStore:StoreType = {
     Main: {
@@ -21,7 +40,9 @@ const initStore:StoreType = {
     MarkView: {
         data: [],
         current: 1,
-        labelRecord: []
+    },
+    Loading: {
+        isLoading: false
     }
 }
 
@@ -53,7 +74,6 @@ const MainReducer = (state: MainStoreType = initStore.Main, action: any) => {
 const DictionaryWindowReducer = (state: DictionaryWindowStoreType = initStore.DictionaryWindow, action: any) => {
     if (action.type === UPDATE_DICTIONARY_DATA) {
         const { tableData, path } = action
-        // console.log(path);
         return {
             ...state,
             tableData,
@@ -92,11 +112,9 @@ const TextWindowReducer = (state: TextWindowStoreType = initStore.TextWindow, ac
 const MarkViewReducer = (state: MarkViewStoreType = initStore.MarkView, action: any) => {
     if (action.type === UPDATE_MARK_TEXT_DATA) {
         const { data } = action
-        const { labelRecord } = state
         return {
             ...state,
             data,
-            labelRecord: labelRecord.length === 0 ? data.map((value: any) => []) : labelRecord
         }
     }  else if (action.type === UPDATE_TEXT_TABLE_PAGE) {
         const { current } = action
@@ -104,22 +122,61 @@ const MarkViewReducer = (state: MarkViewStoreType = initStore.MarkView, action: 
             ...state,
             current
         }
-    } else if (action.type === UPDATE_MARK_RECORD) {
-        const { labelRecord } = action
-        return {
-            ...state,
-            labelRecord
+    } else if (action.type === IDENTIFY_ENTITY) {
+        const { ipcRenderer } = (window as any).electron
+        const data: Array<{
+            text: string,
+            labels: Array<{
+                start: number,
+                end: number,
+                label: string
+            }>
+        }> = state.data.map(
+            (value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; textArr: FontObject[]; }) => ({
+                text: value['text'],
+                labels: value['textArr'].map((value: FontObject) => ({
+                    start: value['start'],
+                    end: value['end'] + 1,
+                    label: value['label']
+                })).filter((value: { start: number; end: number; label: string; }) => value['label'] !== 'none' && value['label'] !== 'uncertain')
+            })
+        )
+        const labelToColor: {
+            [label: string]: string
+        } = {}
+        for (let i = state.data.length - 1; i >= 0; i--) {
+            for (let j = state.data[i].textArr.length - 1; j >= 0; j--) {
+                if (!['none', 'uncertain'].includes(state.data[i].textArr[j]['label'])) {
+                    labelToColor[state.data[i].textArr[j]['label']] = state.data[i].textArr[j]['color']
+                }
+            }
         }
+        // console.log('data: ', data)
+        ipcRenderer.send(IDENTIFY_ENTITY, data, labelToColor)
+        return state
+        
     }
     return state
 }
 
+const LoadingReducer = (state: LoadingStoreType = initStore.Loading, action: any) => {
+    if (action.type === SET_LOADING_STATE) {
+        const { isLoading } = action
+        return {
+            ...state,
+            isLoading
+        }
+    }
+    
+    return state
+}
 
 const combineReducer = combineReducers({
     Main: MainReducer,
     DictionaryWindow: DictionaryWindowReducer,
     TextWindow: TextWindowReducer,
     MarkView: MarkViewReducer,
+    Loading: LoadingReducer,
 })
 const reducer = (state:StoreType = initStore, action:any) => {
     const store1:StoreType = combineReducer(state, action)

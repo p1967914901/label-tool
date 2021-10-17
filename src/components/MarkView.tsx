@@ -6,8 +6,8 @@ import Icon, { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons
 import { ColorResult, SketchPicker } from 'react-color';
 import { SettingIcon } from './Icon';
 import { connect } from 'react-redux';
-import { MarkViewStoreType, StoreType } from '../types/propsTypes';
-import { updateMarkRecord, updateMarkTextData, updateTextTablePage } from '../action';
+import { FontObject, MarkViewStoreType, StoreType } from '../types/propsTypes';
+import { updateMarkTextData, updateTextTablePage } from '../action';
 import { updateTextsData } from '../action';
 
 
@@ -17,7 +17,6 @@ interface MarkViewProps extends MarkViewStoreType {
 	history: any,
 	updateTextTablePage: typeof updateTextTablePage,
 	updateMarkTextData: typeof updateMarkTextData,
-  updateMarkRecord: typeof updateMarkRecord,
 	updateTextsData: typeof updateTextsData,
 }
 interface MarkViewState {
@@ -35,6 +34,9 @@ interface MarkViewState {
 	},
 	popoverVisibleName: string,
 }
+
+// const { ipcRenderer } = (window as any).electron;
+
 class MarkView extends Component<MarkViewProps, MarkViewState>{
 	private startIndex: number
 	private endIndex: number
@@ -66,6 +68,10 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 					color: '#edafda',
 					name: '时间',
 					key: 't'
+				}, {
+					color: '#d1c7b7',
+					name: '设备',
+					key: 'e'
 				}
 			],
 		}
@@ -80,45 +86,47 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 				dataIndex: 'textArr',
 				key: 'text',
 				align: 'left',
-				render: (text: Array<string>, record: { key?: string, text: Array<string> }, index: number) => {
-					const { data, current, labelRecord, updateMarkTextData, updateMarkRecord } = this.props
+				render: (text: Array<FontObject>, record: unknown, index: number) => {
+					const { data, current, updateMarkTextData } = this.props
 					return (
 						<div onMouseUp={
 							() => {
 								let start = Math.min(this.startIndex, this.endIndex)
 								let end = Math.max(this.startIndex, this.endIndex)
-								if (text.slice(start, end + 1).join('').includes(getSelection()?.toString() as string) && getSelection()?.toString()) {
+								if (text.slice(start, end + 1).map((font: FontObject) => font['text']).join('').includes(getSelection()?.toString() as string) && getSelection()?.toString()) {
 									const textBySelect: string = getSelection()?.toString() as string;
-									start = start + text.slice(start, end + 1).join('').indexOf(textBySelect);
+									start = start + text.slice(start, end + 1).map((font: FontObject) => font['text']).join('').indexOf(textBySelect);
 									end = start + textBySelect.length - 1;
-									let startIndex = 0
-									for (let i = 0; i <= start; i++) {
-										startIndex += text[i].length
-									}
-									const endIndex = startIndex + textBySelect.length;
+									let startIndex = data[current * 10 - 10 + index]['textArr'][start]['start']
 									data[current * 10 - 10 + index]['textArr'].splice(start, end + 1 - start)
-									data[current * 10 - 10 + index]['textArr'].splice(start, 0, getSelection()?.toString() as string)
-									updateMarkTextData(data)
-
-									labelRecord[current * 10 - 10 + index].push({
+									data[current * 10 - 10 + index]['textArr'].splice(start, 0, {
+										text: textBySelect,
 										start: startIndex,
-										end: endIndex,
-										label: 'none',
-                    text: textBySelect,
-                    color: 'blue'
+										end: startIndex + textBySelect.length - 1,
+										label: 'uncertain',
+										color: 'blue'
 									})
-                  updateMarkRecord([...labelRecord])
+									updateMarkTextData([...data])
+
+									// labelRecord[current * 10 - 10 + index].push({
+									// 	start: startIndex,
+									// 	end: endIndex,
+									// 	label: 'none',
+                  //   text: textBySelect,
+                  //   color: 'blue'
+									// })
+                  // updateMarkRecord([...labelRecord])
 								}
 								getSelection()?.removeAllRanges()
 								this.startIndex = this.endIndex = -1
 							}
 						}>
 							{
-								text.map((value: string, i: number) => {
+								text.map((value: FontObject, i: number) => {
                   // console.log('r', labelRecord)
-                  const recordIndex = labelRecord[current * 10 - 10 + index].findIndex((r: { start: number; end: number; label: string; text: string; color: string }) => r['text'] === value )
-									if (!value) return '';
-									if (value.length <= 1 && recordIndex === -1) {
+                  // const recordIndex = labelRecord[current * 10 - 10 + index].findIndex((r: { start: number; end: number; label: string; text: string; color: string }) => r['text'] === value )
+									if (!value['text']) return '';
+									if (value['text'].length <= 1 && value['label'] === 'none') {
 										return (
 											<div key={i} style={{
 												display: 'inline-block',
@@ -135,12 +143,12 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 													this.endIndex = i
 												}
 											}>
-												{value}
+												{value['text']}
 											</div>
 										)
 									} else {
 										return (
-											<Tag key={i} color={labelRecord[current * 10 - 10 + index][recordIndex]['color']} closable
+											<Tag key={i} color={value['color']} closable
 												icon={<Icon component={SettingIcon} onClick={
 													() => {
 
@@ -151,22 +159,28 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 												}} onClose={
 													() => {
 														// const { data, current, updateMarkTextData } = this.props
-														const v = value;
+														const arr: Array<FontObject> = value['text'].split('').map((str: string, index: number) => ({
+															text: str,
+															start: value['start'] + index,
+															end: value['start'] + index,
+															label: 'none',
+															color: ''
+														}))
 														data[current * 10 - 10 + index]['textArr'].splice(i, 1)
 														// console.log(v, v.split(''));
-														data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...v.split(''))
+														data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...arr)
 														// delete nameToColor[value]
-                            labelRecord[current * 10 - 10 + index] = labelRecord[current * 10 - 10 + index].filter((value: { start: number; end: number; label: string; text: string; color: string }) => (
-                              value['text'] !== v
-                            ))
+                            // labelRecord[current * 10 - 10 + index] = labelRecord[current * 10 - 10 + index].filter((value: { start: number; end: number; label: string; text: string; color: string }) => (
+                            //   value['text'] !== v
+                            // ))
                             // console.log('.....', labelRecord)
                             // labelRecord[current * 10 - 10 + index].splice(j, 1)
-                            updateMarkRecord(labelRecord)
+                            // updateMarkRecord(labelRecord)
 														updateMarkTextData([...data])
 														// this.setState({  })
 													}
 												}>
-												{value}
+												{value['text']}
 											</Tag>
 										)
 									}
@@ -183,7 +197,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 	public render(): JSX.Element {
 		// const dataStr = 
 		const { labels, inputVisible, labelSettingConfig, popoverVisibleName } = this.state
-		const { history, current, data, labelRecord, updateTextTablePage, updateMarkRecord, updateTextsData } = this.props
+		const { history, current, data, updateTextTablePage, updateTextsData } = this.props
 		// if ()
 		console.log(data[0]);
 		return (
@@ -275,21 +289,21 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 												transform: 'translate(-5px, 2.5px)',
 											}} onClick={
 												() => {
-													for(let i = labelRecord.length - 1; i >= 0; i--) {
-														for(let j = labelRecord[i].length - 1; j >=0; j--) {
-															if(labelRecord[i][j]['label'] === labels[index]['name']) {
-																labelRecord[i][j]['label'] = labelSettingConfig.label
-																labelRecord[i][j]['color'] = labelSettingConfig.color
-															}
-														}
-													}
-													labels[index] = {
-														name: labelSettingConfig.label,
-														key: labelSettingConfig.key,
-														color: labelSettingConfig.color
-													}
-													this.setState({ labels, popoverVisibleName: '' })
-													updateMarkRecord(labelRecord)
+													// for(let i = labelRecord.length - 1; i >= 0; i--) {
+													// 	for(let j = labelRecord[i].length - 1; j >=0; j--) {
+													// 		if(labelRecord[i][j]['label'] === labels[index]['name']) {
+													// 			labelRecord[i][j]['label'] = labelSettingConfig.label
+													// 			labelRecord[i][j]['color'] = labelSettingConfig.color
+													// 		}
+													// 	}
+													// }
+													// labels[index] = {
+													// 	name: labelSettingConfig.label,
+													// 	key: labelSettingConfig.key,
+													// 	color: labelSettingConfig.color
+													// }
+													// this.setState({ labels, popoverVisibleName: '' })
+													// updateMarkRecord(labelRecord)
 												}
 											}>
 												确定
@@ -404,17 +418,17 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 					// float: 'left'
 					transform: 'translate(10px, -40px)'
 				}} onClick={
-					() => {
+					() => { 
 						history.push('/texts')
-						for(let i = labelRecord.length - 1; i >= 0; i--) {
-							data[i]['label'] = labelRecord[i].map((value: { start: number; end: number; label: string; text: string; color: string; }) => ({
-								start: value['start'],
-								end: value['end'],
-								label: value['label']
-							}))
-						}
+
+						// for(let i = labelRecord.length - 1; i >= 0; i--) {
+						// 	data[i]['label'] = labelRecord[i].map((value: { start: number; end: number; label: string; text: string; color: string; }) => ({
+						// 		start: value['start'],
+						// 		end: value['end'],
+						// 		label: value['label']
+						// 	}))
+						// }
 						updateTextsData([...data], '')
-						updateMarkRecord([])
 					}
 				}>返回</Button>
 			</div>
@@ -422,31 +436,22 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 	}
 
 	public componentDidMount() {
-		// const labelRecord: labelRecordType = this.props.data.map(() => [])
-		// console.log(labelRecord)
-		// this.setState({ labelRecord })
 		document.addEventListener('keydown', (e) => {
 			if (e.ctrlKey) {
 				const { labels } = this.state
-        const { labelRecord, updateMarkRecord } = this.props
+        const { data, updateMarkTextData } = this.props
 				for (let i = 0; i < labels.length; i++) {
 					if (labels[i]['key'] === e.key) {
-						// for (let name in nameToColor) {
-						// 	if (nameToColor[name] === 'blue') {
-						// 		nameToColor[name] = labels[i]['color']
-						// 	}
-						// }
-						for (let j = labelRecord.length - 1; j >=0; j--) {
-              labelRecord[j].forEach((value: { start: number; end: number; label: string; text: string; color: string}) => {
-                if (value['label'] === 'none') {
+						for (let j = data.length - 1; j >=0; j--) {
+              data[j]['textArr'].forEach((value: FontObject) => {
+                if (value['color'] === 'blue') {
                   value['label'] = labels[i]['name']
                   value['color'] = labels[i]['color']
                 }
               })
 						}
-            // console.log(labelRecord)
-            updateMarkRecord(labelRecord)
-						this.setState({ })
+						updateMarkTextData([...data])
+						// this.setState({ })
 						break;
 					}
 				}
@@ -468,7 +473,6 @@ const mapStateToProps = (state:StoreType, ownProps?: any) => {
 const mapDispatchToProps = {
   updateTextTablePage,
 	updateMarkTextData,
-  updateMarkRecord,
 	updateTextsData
 }
 

@@ -41,21 +41,7 @@ export const SAVE_TEXTS_DATA = 'SAVE_TEXTS_DATA'
  */
 export const SAVE_TEXTS_DATA_RESULT = 'SAVE_TEXTS_DATA_RESULT'
 
-
 /**
- * 新建字典数据窗口
+ * 返回识别实体后的结果
  */
-export const OPEN_DICTIONARY_WINDOW = 'OPEN_DICTIONARY_WINDOW'
-
-/**
- * 新建语料数据窗口
- */
-export const OPEN_TEXT_WINDOW = 'OPEN_TEXT_WINDOW'
-
-
-
-
-/**
- * 打开模型的配置窗口
- */
-export const OPEN_MODEL_CONFIG_WINDOW = 'OPEN_MODEL_CONFIG_WINDOW'
+ export const IDENTIFY_ENTITY_RESULT = 'IDENTIFY_ENTITY_RESULT'

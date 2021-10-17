@@ -7,9 +7,10 @@ import {
     UPDATE_IS_SAVE,
     UPDATE_TEXT_TABLE_PAGE,
     UPDATE_MARK_TEXT_DATA,
-    UPDATE_MARK_RECORD
+    SET_LOADING_STATE,
+    IDENTIFY_ENTITY,
 } from '../types/actionTypes'
-import { labelRecordType, MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
+import { MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
 
 /**
  * 更新所有的字典数据
@@ -77,9 +78,16 @@ export const updateMarkTextData = (data:MarkTextsDataType) => ({
 })
 
 /**
- * 更新标注记录
+ * 切换加载状态
  */
-export const updateMarkRecord = (labelRecord: labelRecordType) => ({
-    type: UPDATE_MARK_RECORD,
-    labelRecord
+export const setLoadingState = (isLoading: boolean) => ({
+    type: SET_LOADING_STATE,
+    isLoading
+})
+
+/**
+ * 识别实体
+ */
+export const identifyEntity = () => ({
+    type: IDENTIFY_ENTITY
 })

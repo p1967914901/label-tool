@@ -13,7 +13,8 @@ export interface StoreType {
     Main: MainStoreType,
     DictionaryWindow: DictionaryWindowStoreType,
     TextWindow: TextWindowStoreType,
-    MarkView: MarkViewStoreType
+    MarkView: MarkViewStoreType,
+    Loading: LoadingStoreType,
 }
 
 
@@ -40,7 +41,10 @@ export interface TextWindowStoreType {
 export interface MarkViewStoreType {
     data: MarkTextsDataType,
     current: number,
-    labelRecord: labelRecordType,
+}
+
+export interface LoadingStoreType {
+    isLoading: boolean
 }
 
 /**
@@ -77,16 +81,16 @@ export type MarkTextsDataType = Array<{
         end: number,
         label: string
     }>,
-    textArr: Array<string>
+    textArr: Array<FontObject>
 }>
 
 /**
- * 标注记录
+ * 单个文字的类型
  */
-export type labelRecordType = Array<Array<{
-	start: number,
-	end: number,
-	label: string,
-	text: string,
-    color: string
-}>>
+export interface FontObject {
+    text: string,
+    start: number,
+    end: number,
+    label: string,
+    color: string,
+}

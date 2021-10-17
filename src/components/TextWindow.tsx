@@ -6,7 +6,7 @@ import Icon from '@ant-design/icons';
 import { AddIcon, CircleIcon, LabelIcon, SaveIcon, UpdateIcon } from './Icon';
 import { SAVE_TEXTS_DATA } from '../types/ipc';
 import { connect } from 'react-redux';
-import { StoreType, TextWindowStoreType } from '../types/propsTypes';
+import { FontObject, StoreType, TextWindowStoreType } from '../types/propsTypes';
 import { updateIsSave, updateMarkTextData, updateTextsData, updateTextTablePage } from '../action';
 
 interface TextWindowProps extends TextWindowStoreType {
@@ -215,9 +215,15 @@ class TextWindow extends Component<TextWindowProps, TextWindowState>{
               onClick={
                 () => {
                   // updateIsSave(false)
-                  updateMarkTextData(data.map((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; textArr?: Array<string>}) => ({
+                  updateMarkTextData(data.map((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; textArr?: Array<FontObject>}) => ({
                     ...value,
-                    textArr: value['text'].split('')
+                    textArr: value['textArr'] || value['text'].split('').map((value: string, index: number) => ({
+                      text: value,
+                      start: index,
+                      end: index,
+                      label: 'none',
+                      color: ''
+                    }))
                   })))
                   history.push('/mark')
                 }

@@ -7,14 +7,15 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
-import { UPLOAD_DICTIONARY_DATA, UPLOAD_TEXTS_DATA } from '../types/ipc';
+import { IDENTIFY_ENTITY_RESULT, UPLOAD_DICTIONARY_DATA, UPLOAD_TEXTS_DATA } from '../types/ipc';
 import { DictionaryIcon } from './Icon'
 import { MainStoreType, StoreType, TextsDataType } from '../types/propsTypes';
 import { connect } from 'react-redux';
 import DictionaryWindow from './DictionaryWindow';
-import { updateAllDictionaryData, updateDictionaryData, updateLabelByShow, updateTextsData } from '../action';
+import { identifyEntity, setLoadingState, updateAllDictionaryData, updateDictionaryData, updateLabelByShow, updateMarkTextData, updateTextsData } from '../action';
 import TextWindow from './TextWindow';
 import MarkView from './MarkView';
+import Loading from './Loading/index';
 
 
 const { ipcRenderer } = (window as any).electron
@@ -26,6 +27,9 @@ interface MainProps extends MainStoreType {
   updateLabelByShow: typeof updateLabelByShow,
   updateDictionaryData: typeof updateDictionaryData,
   updateTextsData: typeof updateTextsData,
+  setLoadingState: typeof setLoadingState,
+  identifyEntity: typeof identifyEntity,
+  updateMarkTextData: typeof updateMarkTextData,
 }
 interface MainState {
   labelList: Array<string>,
@@ -51,7 +55,7 @@ class Main extends Component<MainProps, MainState>{
     const { Header, Sider, Content } = Layout;
     const { SubMenu } = Menu;
     const { labelList, stringList, openKeys, selectedKeys } = this.state
-    const { history, dictionaryData } = this.props
+    const { history, dictionaryData, setLoadingState, identifyEntity } = this.props
     return (
       <Layout>
         <Sider trigger={null} theme="light">
@@ -153,10 +157,12 @@ class Main extends Component<MainProps, MainState>{
             </Button>
             <Button icon={<PlayCircleOutlined />} onClick={
               () => {
+                setLoadingState(true)
+                identifyEntity()
                 // ipcRenderer.send(OPEN_MODEL_CONFIG_WINDOW)
               }
             }>
-              初始化
+              实体标注
             </Button>
           </Header>
           <Content className="site-layout-background"
@@ -166,7 +172,7 @@ class Main extends Component<MainProps, MainState>{
               minHeight: 600,
             }}
           >
-            {/* <MarkView /> */}
+            <Loading />
             <Switch>
               <Route path="/dictionary" component={DictionaryWindow} />
               <Route path="/texts" component={TextWindow}/>
@@ -180,7 +186,11 @@ class Main extends Component<MainProps, MainState>{
   }
 
   public componentDidMount(): void {
-    
+    ipcRenderer.on(IDENTIFY_ENTITY_RESULT, (event: any, data: any) => {
+      // console.log('result', data)
+      this.props.updateMarkTextData(data)
+      this.props.setLoadingState(false)
+    })
   }
 
   private readXlsxFile(path: string): void {
@@ -254,7 +264,10 @@ const mapDispatchToProps = {
   updateAllDictionaryData,
   updateLabelByShow,
   updateDictionaryData,
-  updateTextsData
+  updateTextsData,
+  setLoadingState,
+  identifyEntity,
+  updateMarkTextData
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

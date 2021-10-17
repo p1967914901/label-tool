@@ -1,0 +1,1675 @@
+[    {
+        "text": "省调张锋令：用上1号机组AGC。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 4
+            },
+            {
+                "start": 8,
+                "label": "EQU",
+                "end": 15
+            }
+        ]
+    },
+    {
+        "text": "1A小机冷油器由2号切换至1号运行。",
+        "labels": []
+    },
+    {
+        "text": "2号石灰石供浆调节阀后法兰补漏,经维护处理无效，7:12恢复运行。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 10
+            }
+        ]
+    },
+    {
+        "text": "1C磨煤机内部异音检查工作结束，内部异音已处理，恢复备用。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 5
+            }
+        ]
+    },
+    {
+        "text": "2B磨煤机旋转分离器电机冷却风扇声音较大，联系华业。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 16
+            },
+            {
+                "start": 23,
+                "label": "ORG",
+                "end": 25
+            }
+        ]
+    },
+    {
+        "text": "1C磨煤机筒体有异音，告维护，入缺。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 5
+            },
+            {
+                "start": 5,
+                "label": "LOC",
+                "end": 7
+            }
+        ]
+    },
+    {
+        "text": "电一种票《2A循环水泵电机检修》终结。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导--高总；设备部--屠海彪；运行部--蒋俊杰；安健环部--王剑波；维护部--鲍正豪；燃料部--刘耀杰。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 10,
+                "label": "PER",
+                "end": 12
+            },
+            {
+                "start": 13,
+                "label": "LOC",
+                "end": 16
+            },
+            {
+                "start": 17,
+                "label": "PER",
+                "end": 20
+            },
+            {
+                "start": 21,
+                "label": "LOC",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "PER",
+                "end": 28
+            },
+            {
+                "start": 29,
+                "label": "LOC",
+                "end": 33
+            },
+            {
+                "start": 34,
+                "label": "PER",
+                "end": 37
+            },
+            {
+                "start": 38,
+                "label": "LOC",
+                "end": 41
+            },
+            {
+                "start": 42,
+                "label": "PER",
+                "end": 45
+            },
+            {
+                "start": 46,
+                "label": "LOC",
+                "end": 49
+            },
+            {
+                "start": 50,
+                "label": "PER",
+                "end": 53
+            }
+        ]
+    },
+    {
+        "text": "2号炉渣仓散装头故障（内部套筒和布袋破损），已联系维护。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 5
+            },
+            {
+                "start": 5,
+                "label": "LOC",
+                "end": 8
+            },
+            {
+                "start": 11,
+                "label": "LOC",
+                "end": 15
+            },
+            {
+                "start": 16,
+                "label": "LOC",
+                "end": 18
+            }
+        ]
+    },
+    {
+        "text": "高总指示：接下来低温天气，各值需精心监盘，认真巡检，做好防冻工作。并通知外围各控。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "PER",
+                "end": 2
+            },
+            {
+                "start": 36,
+                "label": "LOC",
+                "end": 38
+            }
+        ]
+    },
+    {
+        "text": "启动2E磨煤机，2号炉开始升温升压。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 7
+            },
+            {
+                "start": 8,
+                "label": "EQU",
+                "end": 11
+            }
+        ]
+    },
+    {
+        "text": "启动2B磨煤机。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 7
+            }
+        ]
+    },
+    {
+        "text": "启动2B引风机、送风机、一次风机。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 7
+            },
+            {
+                "start": 8,
+                "label": "EQU",
+                "end": 11
+            },
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 16
+            }
+        ]
+    },
+    {
+        "text": "汇报省调丁月强同意，2号机组负荷加至500MW，用上AGC。",
+        "labels": [
+            {
+                "start": 4,
+                "label": "PER",
+                "end": 7
+            },
+            {
+                "start": 10,
+                "label": "EQU",
+                "end": 14
+            },
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 29
+            }
+        ]
+    },
+    {
+        "text": "停运2B吸收塔循环泵。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 10
+            }
+        ]
+    },
+    {
+        "text": "维护告：1号液氨蒸发槽时液氨蒸发循环泵故障已处理好。投入1号液氨蒸发槽运行，供氨压力稳定，汇报省调黄立超同意，2号机负荷高限设回1000MW。",
+        "labels": [
+            {
+                "start": 4,
+                "label": "EQU",
+                "end": 11
+            },
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 19
+            },
+            {
+                "start": 28,
+                "label": "EQU",
+                "end": 35
+            },
+            {
+                "start": 47,
+                "label": "ORG",
+                "end": 49
+            },
+            {
+                "start": 49,
+                "label": "PER",
+                "end": 52
+            },
+            {
+                "start": 55,
+                "label": "EQU",
+                "end": 58
+            }
+        ]
+    },
+    {
+        "text": "2号氨气缓冲罐进口调节阀阀杆处已不漏氨。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 12
+            },
+            {
+                "start": 12,
+                "label": "LOC",
+                "end": 14
+            }
+        ]
+    },
+    {
+        "text": "10KV工作2A段备用电源开关综合保护装置检查工作开工。09:19工作结束，装置已正常无报警，投运正常。",
+        "labels": [
+            {
+                "start": 6,
+                "label": "EQU",
+                "end": 21
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导--夏总，维护部--李先宝，运行部--毛继成，燃料部--胡海萍，设备部--龙伟军，安健环部--韩炽。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 10,
+                "label": "PER",
+                "end": 12
+            },
+            {
+                "start": 13,
+                "label": "LOC",
+                "end": 16
+            },
+            {
+                "start": 17,
+                "label": "PER",
+                "end": 20
+            },
+            {
+                "start": 21,
+                "label": "LOC",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "PER",
+                "end": 28
+            },
+            {
+                "start": 29,
+                "label": "LOC",
+                "end": 32
+            },
+            {
+                "start": 33,
+                "label": "PER",
+                "end": 36
+            },
+            {
+                "start": 37,
+                "label": "LOC",
+                "end": 40
+            },
+            {
+                "start": 41,
+                "label": "PER",
+                "end": 44
+            },
+            {
+                "start": 45,
+                "label": "LOC",
+                "end": 49
+            },
+            {
+                "start": 50,
+                "label": "PER",
+                "end": 52
+            }
+        ]
+    },
+    {
+        "text": "定期工作：1A、1B小机速关阀活动试验正常。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 15
+            }
+        ]
+    },
+    {
+        "text": "中水澳优（0.61%）上1BCD仓，富动24（0.81%）上2ACD仓，优混煤（0.80%）上1、2号炉其余仓。",
+        "labels": [
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 17
+            },
+            {
+                "start": 30,
+                "label": "EQU",
+                "end": 35
+            },
+            {
+                "start": 47,
+                "label": "EQU",
+                "end": 55
+            }
+        ]
+    },
+    {
+        "text": "维护交待：6号高密池加药管穿墙段漏，明天处理。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 10
+            },
+            {
+                "start": 10,
+                "label": "LOC",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "1、2号冷却塔水位高，停1D海补水泵，关原水扩容1A、1B进水调整门。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 7
+            },
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 18
+            },
+            {
+                "start": 24,
+                "label": "EQU",
+                "end": 34
+            }
+        ]
+    },
+    {
+        "text": "1BCD仓上中水澳优（干基硫份0.52%），1号炉其余仓上优混煤（干基硫份0.83%），2号炉全部仓上优混煤（干基硫份0.8%）。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 5
+            },
+            {
+                "start": 22,
+                "label": "EQU",
+                "end": 28
+            },
+            {
+                "start": 44,
+                "label": "EQU",
+                "end": 50
+            }
+        ]
+    },
+    {
+        "text": "今日2号锅炉能耗试验及深度调峰试验结束。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 6
+            }
+        ]
+    },
+    {
+        "text": "联系省调童文正同意：停用2号机组AGC并将负荷加至900MW。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "ORG",
+                "end": 4
+            },
+            {
+                "start": 4,
+                "label": "PER",
+                "end": 7
+            },
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 19
+            }
+        ]
+    },
+    {
+        "text": "1号斗轮机斗臂皮带机39号下托辊脱落，停运。维护将脱落长托辊拆除，1号斗轮机恢复运行。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 16
+            },
+            {
+                "start": 22,
+                "label": "PER",
+                "end": 24
+            },
+            {
+                "start": 33,
+                "label": "EQU",
+                "end": 38
+            }
+        ]
+    },
+    {
+        "text": "省调金啸虎令：2号机投入AGC。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 5
+            },
+            {
+                "start": 7,
+                "label": "EQU",
+                "end": 10
+            },
+            {
+                "start": 12,
+                "label": "EQU",
+                "end": 15
+            }
+        ]
+    },
+    {
+        "text": "今日2号锅炉能耗试验及深度调峰试验结束。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 6
+            }
+        ]
+    },
+    {
+        "text": "2号机组冷端系统优化试验要求，停止1、2号冷却塔补水。16:36试验结束，恢复补水。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 4
+            },
+            {
+                "start": 17,
+                "label": "EQU",
+                "end": 24
+            }
+        ]
+    },
+    {
+        "text": "1号液氨储罐开始卸氨。11:17卸氨结束，1号液氨储罐1.97m。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 6
+            },
+            {
+                "start": 21,
+                "label": "EQU",
+                "end": 27
+            }
+        ]
+    },
+    {
+        "text": "25日2号锅炉能耗试验结束。",
+        "labels": [
+            {
+                "start": 3,
+                "label": "EQU",
+                "end": 7
+            }
+        ]
+    },
+    {
+        "text": "1A除盐水泵事故按钮更换工作结束，维护告：1A除盐水泵电机可投运，但是事故按钮不能使用。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 6
+            },
+            {
+                "start": 21,
+                "label": "EQU",
+                "end": 29
+            }
+        ]
+    },
+    {
+        "text": "省调郭文杰许可：2号机一次调频撤出。（2号炉能耗试验、2号机汽机变背压试验）",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 5
+            },
+            {
+                "start": 8,
+                "label": "EQU",
+                "end": 11
+            },
+            {
+                "start": 19,
+                "label": "EQU",
+                "end": 22
+            },
+            {
+                "start": 27,
+                "label": "EQU",
+                "end": 32
+            }
+        ]
+    },
+    {
+        "text": "热控告：应设备部要求，已将1、2号液氨储罐温度保护取消。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "LOC",
+                "end": 8
+            },
+            {
+                "start": 13,
+                "label": "EQU",
+                "end": 21
+            }
+        ]
+    },
+    {
+        "text": "汇报省调詹文达同意：2号机负荷加至900MW。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "ORG",
+                "end": 4
+            },
+            {
+                "start": 4,
+                "label": "PER",
+                "end": 7
+            },
+            {
+                "start": 10,
+                "label": "EQU",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导--吴斌；设备部--卢敏亚；安健环部--王剑波；运行部--陈剑荣；燃料部--徐建国；维护部--俞爱军。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 10,
+                "label": "PER",
+                "end": 12
+            },
+            {
+                "start": 13,
+                "label": "LOC",
+                "end": 16
+            },
+            {
+                "start": 17,
+                "label": "PER",
+                "end": 20
+            }
+        ]
+    },
+    {
+        "text": "省调叶聪琪许可：拉开1号主变50136闸刀。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 5
+            },
+            {
+                "start": 10,
+                "label": "EQU",
+                "end": 14
+            }
+        ]
+    },
+    {
+        "text": "网调秦康平令：许可1号主变5013开关、牛浦线/1号主变5012开关改为运行，发令时间：6:15。于6:55向网调王健交令。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 5
+            },
+            {
+                "start": 9,
+                "label": "EQU",
+                "end": 19
+            },
+            {
+                "start": 20,
+                "label": "EQU",
+                "end": 23
+            },
+            {
+                "start": 24,
+                "label": "EQU",
+                "end": 34
+            }
+        ]
+    },
+    {
+        "text": "1A、1B脱硫废水盐酸计量泵出口管漏已处理好。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 14
+            },
+            {
+                "start": 14,
+                "label": "LOC",
+                "end": 17
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导--罗晶，设备部--王焕明，维护部--金士政，运行部--毛继成，安健环部--韩炽，燃料部--孙敬文。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 10,
+                "label": "PER",
+                "end": 12
+            },
+            {
+                "start": 13,
+                "label": "LOC",
+                "end": 16
+            },
+            {
+                "start": 17,
+                "label": "PER",
+                "end": 20
+            },
+            {
+                "start": 21,
+                "label": "LOC",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "PER",
+                "end": 28
+            },
+            {
+                "start": 29,
+                "label": "LOC",
+                "end": 32
+            },
+            {
+                "start": 33,
+                "label": "PER",
+                "end": 36
+            },
+            {
+                "start": 37,
+                "label": "LOC",
+                "end": 41
+            },
+            {
+                "start": 42,
+                "label": "PER",
+                "end": 44
+            },
+            {
+                "start": 45,
+                "label": "LOC",
+                "end": 48
+            },
+            {
+                "start": 49,
+                "label": "PER",
+                "end": 52
+            }
+        ]
+    },
+    {
+        "text": "富动24煤上2BCD仓，优混煤上2号炉其余仓。续卸富兴10轮富动24煤1000吨。",
+        "labels": [
+            {
+                "start": 6,
+                "label": "EQU",
+                "end": 11
+            },
+            {
+                "start": 16,
+                "label": "EQU",
+                "end": 22
+            }
+        ]
+    },
+    {
+        "text": "因1号机快冷需要，强制1号机跳机信号为“0”。并开启1A/1B高压调门开度至2%。",
+        "labels": [
+            {
+                "start": 1,
+                "label": "EQU",
+                "end": 4
+            },
+            {
+                "start": 11,
+                "label": "EQU",
+                "end": 14
+            },
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 35
+            }
+        ]
+    },
+    {
+        "text": "停运1A引风机，通风冷却结束。停运1号干式电除尘三电场。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "EQU",
+                "end": 7
+            },
+            {
+                "start": 17,
+                "label": "EQU",
+                "end": 27
+            }
+        ]
+    },
+    {
+        "text": "热机票《1号炉炉本体及炉顶大罩检修》许可开工。",
+        "labels": [
+            {
+                "start": 4,
+                "label": "EQU",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "LOC",
+                "end": 10
+            },
+            {
+                "start": 11,
+                "label": "LOC",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "2号炉A侧过热器一级减温水调节阀压兰带压堵漏工作开工。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 16
+            }
+        ]
+    },
+    {
+        "text": "1号吸收塔托盘焊补,许可开工",
+        "labels": [
+            {
+                "start": 0,
+                "label": "-EQU",
+                "end": 5
+            }
+        ]
+    },
+    {
+        "text": "仪用空压机出口母管压力下降至0.63MPa，就地检查1E仪用空压机状态为“调节运行”，仪用空压机由1E切至1F运行，告周华军。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 33
+            },
+            {
+                "start": 43,
+                "label": "EQU",
+                "end": 48
+            },
+            {
+                "start": 59,
+                "label": "PER",
+                "end": 62
+            }
+        ]
+    },
+    {
+        "text": "华业告：2A给煤机上闸板只能全开，不能全关（只能关至40%），需待2A煤仓烧空后处理。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 4,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 9,
+                "label": "LOC",
+                "end": 12
+            },
+            {
+                "start": 33,
+                "label": "EQU",
+                "end": 37
+            }
+        ]
+    },
+    {
+        "text": "启1A一级反渗透，发现PX装置多根不转，停运，告维护，入缺。",
+        "labels": [
+            {
+                "start": 1,
+                "label": "EQU",
+                "end": 8
+            }
+        ]
+    },
+    {
+        "text": "维护部处理1A真空泵后，重启，电流仍偏大。维护告：先运行，观察一段时间。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "LOC",
+                "end": 3
+            },
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 10
+            }
+        ]
+    },
+    {
+        "text": "维护告：查明1B磨煤机密封风门电源单相接地，需更换电缆处理。现手动开启，开状态强制为“1”（1B磨煤机启动需要",
+        "labels": [
+            {
+                "start": 6,
+                "label": "EQU",
+                "end": 15
+            },
+            {
+                "start": 46,
+                "label": "EQU",
+                "end": 51
+            }
+        ]
+    },
+    {
+        "text": "2号炉干式电除尘电场改至检修。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 10
+            }
+        ]
+    },
+    {
+        "text": "1号炉引、送风机及一次风机润滑油泵联锁试验正常，启动1B引风机、1B送风机，总风量显示为0，联系维护处理",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 8
+            },
+            {
+                "start": 9,
+                "label": "EQU",
+                "end": 17
+            },
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 31
+            },
+            {
+                "start": 32,
+                "label": "EQU",
+                "end": 37
+            }
+        ]
+    },
+    {
+        "text": "联系维护投运1号炉总排口CEMS仪表。",
+        "labels": [
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 4
+            },
+            {
+                "start": 6,
+                "label": "EQU",
+                "end": 9
+            }
+        ]
+    },
+    {
+        "text": "补给水泵轴承温升率1",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 4
+            }
+        ]
+    },
+    {
+        "text": "省调沈曦令：2号机开始停机，汇报金总，告设备部王焕明，维护部郑晓。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 4
+            },
+            {
+                "start": 6,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 16,
+                "label": "PER",
+                "end": 18
+            },
+            {
+                "start": 20,
+                "label": "LOC",
+                "end": 23
+            },
+            {
+                "start": 23,
+                "label": "PER",
+                "end": 26
+            },
+            {
+                "start": 27,
+                "label": "LOC",
+                "end": 30
+            },
+            {
+                "start": 30,
+                "label": "PER",
+                "end": 32
+            }
+        ]
+    },
+    {
+        "text": "1号炉湿式电除尘器内部检查处理，集控确认工作终结。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 3
+            },
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 9
+            }
+        ]
+    },
+    {
+        "text": "（秦皇岛）",
+        "labels": [
+            {
+                "start": 1,
+                "label": "LOC",
+                "end": 4
+            }
+        ]
+    },
+    {
+        "text": "检修作业通知单JXD_2111_180603_0012号炉炉顶大罩人孔门开启，许可开工。",
+        "labels": [
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 29
+            },
+            {
+                "start": 29,
+                "label": "LOC",
+                "end": 33
+            }
+        ]
+    },
+    {
+        "text": "检修作业通知单JXD_2111_190406_0011A磨煤机电机定子绕组温度4检查。",
+        "labels": [
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 37
+            }
+        ]
+    },
+    {
+        "text": "1A磨煤机动态分离器下轴承温度元件检查。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 10
+            },
+            {
+                "start": 10,
+                "label": "LOC",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "定期工作：2号机工频2B凝泵定期试转正常。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "EQU",
+                "end": 8
+            },
+            {
+                "start": 10,
+                "label": "EQU",
+                "end": 14
+            }
+        ]
+    },
+    {
+        "text": "2号机定冷水泵2B切至2A运行。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 11,
+                "label": "EQU",
+                "end": 13
+            }
+        ]
+    },
+    {
+        "text": "2B控制油泵冷却泵切至2A控制油冷却泵运行，无冷却效果，切回2B控制油冷却泵运行，联系告维护。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 11,
+                "label": "EQU",
+                "end": 19
+            },
+            {
+                "start": 30,
+                "label": "EQU",
+                "end": 38
+            }
+        ]
+    },
+    {
+        "text": "2D磨煤机动态分离器上轴承温度元件检查,许可开工。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 10
+            },
+            {
+                "start": 10,
+                "label": "LOC",
+                "end": 13
+            },
+            {
+                "start": 13,
+                "label": "EQU",
+                "end": 17
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导---周董，运行部---黄士雷，维护部---郑晓，燃料部---潘巨元，设备部---屠海彪，安健环---王爱民。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 12,
+                "label": "PER",
+                "end": 14
+            },
+            {
+                "start": 15,
+                "label": "LOC",
+                "end": 18
+            },
+            {
+                "start": 21,
+                "label": "PER",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "LOC",
+                "end": 28
+            },
+            {
+                "start": 31,
+                "label": "PER",
+                "end": 33
+            },
+            {
+                "start": 34,
+                "label": "LOC",
+                "end": 37
+            },
+            {
+                "start": 40,
+                "label": "PER",
+                "end": 43
+            },
+            {
+                "start": 44,
+                "label": "LOC",
+                "end": 47
+            },
+            {
+                "start": 50,
+                "label": "PER",
+                "end": 53
+            },
+            {
+                "start": 54,
+                "label": "PER",
+                "end": 57
+            },
+            {
+                "start": 60,
+                "label": "PER",
+                "end": 63
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导---周董，运行部---黄士雷，维护部---郑晓，燃料部---潘巨元，设备部---屠海彪，安健环---王爱民。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 12,
+                "label": "PER",
+                "end": 14
+            },
+            {
+                "start": 15,
+                "label": "LOC",
+                "end": 18
+            },
+            {
+                "start": 21,
+                "label": "PER",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "LOC",
+                "end": 28
+            },
+            {
+                "start": 31,
+                "label": "PER",
+                "end": 33
+            },
+            {
+                "start": 34,
+                "label": "LOC",
+                "end": 37
+            },
+            {
+                "start": 40,
+                "label": "PER",
+                "end": 43
+            },
+            {
+                "start": 44,
+                "label": "LOC",
+                "end": 47
+            },
+            {
+                "start": 50,
+                "label": "PER",
+                "end": 53
+            },
+            {
+                "start": 54,
+                "label": "PER",
+                "end": 57
+            },
+            {
+                "start": 60,
+                "label": "PER",
+                "end": 63
+            }
+        ]
+    },
+    {
+        "text": "1A前置泵进口滤网排污管法兰漏汽处理结束。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 12
+            }
+        ]
+    },
+    {
+        "text": "1A小机油质水分、颗粒度严重超标，已投入滤油机进行滤油。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 4
+            },
+            {
+                "start": 20,
+                "label": "EQU",
+                "end": 23
+            }
+        ]
+    },
+    {
+        "text": "2A循泵恢复至电机试转前状态，准备明天大修后空电机试转。（相关工作票已押回）",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 4
+            },
+            {
+                "start": 22,
+                "label": "EQU",
+                "end": 25
+            }
+        ]
+    },
+    {
+        "text": "4号高密翻池，隔离4号高密池。（4号高密池刮泥机靠背轮坏，需要整套更换）",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 4
+            },
+            {
+                "start": 9,
+                "label": "EQU",
+                "end": 14
+            },
+            {
+                "start": 16,
+                "label": "EQU",
+                "end": 24
+            }
+        ]
+    },
+    {
+        "text": "热力机械工作票“2号机2A小机本体检修”,许可开工。",
+        "labels": [
+            {
+                "start": 8,
+                "label": "EQU",
+                "end": 15
+            },
+            {
+                "start": 15,
+                "label": "LOC",
+                "end": 17
+            }
+        ]
+    },
+    {
+        "text": "电气第一种工作票“2号炉送风机电机、一次风机电机、引风机电机小修,配合机务查轴封磨损”，许可开工，16:11工作终结，经通风试验正常，可投运。",
+        "labels": [
+            {
+                "start": 9,
+                "label": "EQU",
+                "end": 17
+            },
+            {
+                "start": 18,
+                "label": "EQU",
+                "end": 24
+            },
+            {
+                "start": 25,
+                "label": "EQU",
+                "end": 30
+            }
+        ]
+    },
+    {
+        "text": "2C110V充电器从备用改为运行，2A110V充电器从运行改为备用（配合380V汽机2A段停役需要）",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 9
+            },
+            {
+                "start": 17,
+                "label": "EQU",
+                "end": 26
+            },
+            {
+                "start": 41,
+                "label": "EQU",
+                "end": 46
+            }
+        ]
+    },
+    {
+        "text": "1号机A侧再热器进口压力变送器一次阀阀后压力测点强制已解除。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "EQU",
+                "end": 8
+            },
+            {
+                "start": 10,
+                "label": "EQU",
+                "end": 15
+            }
+        ]
+    },
+    {
+        "text": "今日值班：公司领导--罗晶；维护部--陈朝晖；设备部--卢敏亚；燃料部--王灵敏；安健环部--吴伟喷；运行部--徐道明。",
+        "labels": [
+            {
+                "start": 5,
+                "label": "ORG",
+                "end": 7
+            },
+            {
+                "start": 7,
+                "label": "PER",
+                "end": 9
+            },
+            {
+                "start": 11,
+                "label": "PER",
+                "end": 13
+            },
+            {
+                "start": 14,
+                "label": "LOC",
+                "end": 17
+            },
+            {
+                "start": 19,
+                "label": "PER",
+                "end": 22
+            },
+            {
+                "start": 23,
+                "label": "LOC",
+                "end": 26
+            },
+            {
+                "start": 28,
+                "label": "PER",
+                "end": 31
+            },
+            {
+                "start": 32,
+                "label": "LOC",
+                "end": 35
+            },
+            {
+                "start": 37,
+                "label": "PER",
+                "end": 40
+            },
+            {
+                "start": 41,
+                "label": "LOC",
+                "end": 45
+            },
+            {
+                "start": 47,
+                "label": "PER",
+                "end": 50
+            },
+            {
+                "start": 51,
+                "label": "LOC",
+                "end": 54
+            },
+            {
+                "start": 56,
+                "label": "PER",
+                "end": 59
+            }
+        ]
+    },
+    {
+        "text": "省调苏宜靖令：1号机开始开机，21日零点后并网，21日上午能带满出力。汇报高总、金总、王总；告方国跃、朱善会、郑晓、各控制室。",
+        "labels": [
+            {
+                "start": 0,
+                "label": "ORG",
+                "end": 2
+            },
+            {
+                "start": 2,
+                "label": "PER",
+                "end": 5
+            },
+            {
+                "start": 7,
+                "label": "EQU",
+                "end": 10
+            },
+            {
+                "start": 37,
+                "label": "PER",
+                "end": 39
+            },
+            {
+                "start": 40,
+                "label": "PER",
+                "end": 42
+            },
+            {
+                "start": 43,
+                "label": "PER",
+                "end": 45
+            },
+            {
+                "start": 47,
+                "label": "PER",
+                "end": 50
+            },
+            {
+                "start": 51,
+                "label": "PER",
+                "end": 54
+            },
+            {
+                "start": 55,
+                "label": "PER",
+                "end": 57
+            }
+        ]
+    },
+    {
+        "text": "检修作业通知单JXD_2111_180522_005循环泵房外单轨吊滑线更换脚手架搭设,许可开工",
+        "labels": [
+            {
+                "start": 26,
+                "label": "EQU",
+                "end": 29
+            }
+        ]
+    },
+    {
+        "text": "负荷上行，启动1F、2F磨煤机。",
+        "labels": [
+            {
+                "start": 7,
+                "label": "EQU",
+                "end": 15
+            }
+        ]
+    }
+]

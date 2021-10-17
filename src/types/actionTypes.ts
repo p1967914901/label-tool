@@ -52,6 +52,12 @@ export const UPDATE_TEXT_TABLE_PAGE = 'UPDATE_TEXT_TABLE_PAGE'
 export const UPDATE_MARK_TEXT_DATA = 'UPDATE_MARK_TEXT_DATA'
 
 /**
- * 更新标注记录
+ * 切换加载状态
  */
-export const UPDATE_MARK_RECORD = 'UPDATE_MARK_RECORD'
+export const SET_LOADING_STATE = 'SET_LOADING_STATE'
+
+/**
+ * 识别实体
+ */
+export const IDENTIFY_ENTITY = 'IDENTIFY_ENTITY'
+
