@@ -83,6 +83,9 @@ class Perceptron:
 		
 	def train(self, sentences, save_loc=None, nr_iter=5, shuf=False):
 		self._make_tagdict(sentences)
+		# print(len(sentences))
+		if sentences == []:
+			return
 		for iter_ in range(nr_iter):
 			c = 0
 			n = 0
@@ -103,13 +106,13 @@ class Perceptron:
 		self.model.average_weights()
 		self.save(save_loc)
 		
-	def save(self, loc='./ap.model', zip=True):
+	def save(self, loc=os.path.dirname(os.path.realpath(sys.argv[0]))+r'\ap.model', zip=True):
 		if zip == False:
 			pickle.dump((self.model.weights, self.model.classes), open(loc, 'wb'))
 		else:
 			pickle.dump((self.model.weights, self.model.classes), gzip.open(loc, 'wb'))
 			
-	def load(self, loc='./ap.model', zip=True):
+	def load(self, loc=os.path.dirname(os.path.realpath(sys.argv[0]))+r'\ap.model', zip=True):
 		if zip == False:
 			self.model.weights, self.model.classes = pickle.load(open(loc, 'rb'))
 		else:
@@ -149,7 +152,6 @@ class Perceptron:
 				                                                                    #ap.model是实体识别的    cws.model是分词的
 
 def get_json_data(filepath):     #转化json格式训练集 到需要的sentence
-	# print("训练集格式为json")
 	training_data = []
 	sentence = ([], [])
 	dict=json.load(open(filepath,"r",encoding="utf-8"))
@@ -170,7 +172,6 @@ def get_json_data(filepath):     #转化json格式训练集 到需要的sentence
 	return training_data
 
 def get_txt_data(filepath):        #获取txt格式的训练集
-	# print("训练集格式为txt")
 	training_data=[]
 	sentence = ([], [])
 	fin = open(filepath, 'r', encoding='utf8')
@@ -221,13 +222,18 @@ def json_txt_prd(filepath,savePath,onuse_str,tagger):   #读取的json格式的�
 	txtWrite.close()
 
 def json_json_prd(filepath,savePath,onuse_str,tagger):
-	def ceshi_trans(filepath):   # 由 json_prd调用  将json格式测试集转化为需要的sentence格式
+	"""
+		json 格式的训练集
+		得到json格式的预测集 该预测集保留了之前打好标签的部分
+	"""
+	js = open(filepath,"r",encoding="utf-8")
+	train_list =json.load(js)
+	def ceshi_trans(train_list):   # 由 json_prd调用  将json格式测试集转化为需要的sentence格式
 		sentence = []
-		list=json.load(open(filepath,"r",encoding="utf-8"))
-		for obj in list:
+		for obj in train_list:
 			sentence.append(obj["text"])
 		return sentence
-	ff2=ceshi_trans(filepath)
+	ff2=ceshi_trans(train_list)
 	txtWrite = open(savePath,"w",encoding="utf-8")
 	arr = []
 	for line in ff2:
@@ -256,10 +262,33 @@ def json_json_prd(filepath,savePath,onuse_str,tagger):
 						lb['start'] = index
 						lb['label'] = label
 		arr.append(temp_dict)
-	txtWrite.write(json.dumps(arr,indent=4,ensure_ascii=False))
+	# print(len(arr))
+	# print(len(train_list))
+	new_arr= []        
+	for train,predict in zip(train_list,arr):       #保留训练集中已经打好标签的   并输出json格式的预测集
+		temp_dict = {"text":"",'labels':[]}
+		temp_dict["text"] = train["text"]
+		temp_dict["labels"] = train["labels"]
+		predict_labels = predict["labels"]
+		if train["labels"] == []:
+			temp_dict["labels"] = predict["labels"]
+			new_arr.append(temp_dict)
+			continue
+		if predict_labels != []:
+			for elem in predict_labels:
+				flag = 0
+				for i in train["labels"]:
+					if (elem['start'] <= i['start'] and elem['end'] >= i['end']) or (elem['start'] <i['end'] and elem['end']>=i['end']):
+						flag = 1
+						break
+				if flag == 0:
+					temp_dict["labels"].append(elem)
+		new_arr.append(temp_dict)
+	txtWrite.write(json.dumps(new_arr,indent=4,ensure_ascii=False))
 	txtWrite.close()
+	js.close()
 
-def txt_txt_prd(filepath,savePath,onuse_str,tagger):      #读取使用 txt格式测试集
+def txt_txt_prd(filepath,savePath,onuse_str,tagger):      #读取使用 txt格式测试集  输出txt格式的预测集
 	with open (filepath,"r",encoding="utf-8") as f:
 		ww = open(savePath,"w",encoding="utf-8")
 		arr=list(f)
@@ -271,11 +300,13 @@ def txt_txt_prd(filepath,savePath,onuse_str,tagger):      #读取使用 txt格�
 			labels=tagger.predict(words)
 			for word,label in zip(words, labels):
 				ww.write(word+"\t"+label+"\n")
-				# print(word,label)
 			ww.write("\n")
 		ww.close()
 
 def txt_json_prd(filepath,savePath,onuse_str,tagger):
+	"""
+		TXT格式的训练集  得到json格式的预测集
+	"""
 	with open (filepath,"r",encoding="utf-8") as f:
 		ww = open(savePath,"w",encoding="utf-8")
 		ff2 = list(f)
@@ -314,7 +345,7 @@ def predict(filepath,savePath,model = os.path.dirname(os.path.realpath(sys.argv[
 	"""
 		测试集数据格式支持json   txt
 	"""
-	onuse_str=" \n"
+	onuse_str="\n"
 	tagger = Perceptron(model)
 	key=filepath.split(".")[-1]
 	key2 = savePath.split(".")[-1]
@@ -335,19 +366,19 @@ def get_arg():
 	args = sys.argv
 	if len(args) == 2:                #传入1 个参数   1.json格式训练集   只训练模型
 		train_path = args[1]
-		train(filepath=train_path,nr_iter=2) 
+		train(filepath=train_path,nr_iter=3) 
 		write_predict(train_path,os.path.dirname(os.path.realpath(sys.argv[0])) + r'.\result.json')
 		print("success")
 	elif len(args) == 3:                #传入2个参数的时候  1.json格式训练集路径  2.json格式预测集路径
 		train_path = args[1]
-		train(filepath=train_path,nr_iter=2) 
+		train(filepath=train_path,nr_iter=3) 
 		current_dir = os.path.dirname(os.path.realpath(sys.argv[0])) + r'.\result.json'
 		predict_path = args[2]
 		write_predict(predict_path, r'.\result.json')
 		print(current_dir)
 	elif len(args) == 4:                    #传入3个参数的时候  1.json格式训练集路径  2.json格式预测集路径    3.json格式预测结果的保存路径
 		train_path = args[1]
-		train(filepath=train_path,nr_iter=2) 
+		train(filepath=train_path,nr_iter=3) 
 		predict_path = args[2]
 		save_predictions_path = args[3]
 		write_predict(predict_path, save_predictions_path)

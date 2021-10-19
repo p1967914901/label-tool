@@ -90,6 +90,7 @@ class Main extends Component<MainProps, MainState>{
                       this.props.updateLabelByShow(value)
                       this.props.updateDictionaryData(dictionaryData[value])
                       this.setState({ selectedKeys: [value] })
+                      history.push('/dictionary')
                     }
                   }>
                     {value}

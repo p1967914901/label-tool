@@ -95,7 +95,7 @@
   "build": {
     "files": [
       "build/**/*",
-      "main/"
+      "main/**/*"
     ],
     "extends": null
   },
