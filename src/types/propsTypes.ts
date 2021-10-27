@@ -15,6 +15,7 @@ export interface StoreType {
     TextWindow: TextWindowStoreType,
     MarkView: MarkViewStoreType,
     Loading: LoadingStoreType,
+    TrainView: MarkViewStoreType,
 }
 
 

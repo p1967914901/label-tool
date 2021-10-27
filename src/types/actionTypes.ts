@@ -47,6 +47,11 @@ export const UPDATE_IS_SAVE = 'UPDATE_IS_SAVE'
 export const UPDATE_TEXT_TABLE_PAGE = 'UPDATE_TEXT_TABLE_PAGE'
 
 /**
+ * 更新训练集数据
+ */
+export const UPDATE_TRAIN_DATA = 'UPDATE_TRAIN_DATA'
+
+/**
  * 更新标注的文本数据
  */
 export const UPDATE_MARK_TEXT_DATA = 'UPDATE_MARK_TEXT_DATA'

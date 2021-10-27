@@ -9,6 +9,7 @@ import {
     UPDATE_MARK_TEXT_DATA,
     SET_LOADING_STATE,
     IDENTIFY_ENTITY,
+    UPDATE_TRAIN_DATA,
 } from '../types/actionTypes'
 import { MarkTextsDataType, TableDataType, TextsDataType } from '../types/propsTypes'
 
@@ -74,6 +75,14 @@ export const updateTextTablePage = (current: number) => ({
  */
 export const updateMarkTextData = (data:MarkTextsDataType) => ({
     type: UPDATE_MARK_TEXT_DATA,
+    data
+})
+
+/**
+ * 更新训练集数据
+ */
+export const updateTrainData = (data:MarkTextsDataType) => ({
+    type: UPDATE_TRAIN_DATA,
     data
 })
 

@@ -8,7 +8,7 @@ import {
   Switch,
 } from 'react-router-dom'
 import { IDENTIFY_ENTITY_RESULT, UPLOAD_DICTIONARY_DATA, UPLOAD_TEXTS_DATA } from '../types/ipc';
-import { DictionaryIcon } from './Icon'
+import { DictionaryIcon, TrainIcon } from './Icon'
 import { MainStoreType, StoreType, TextsDataType } from '../types/propsTypes';
 import { connect } from 'react-redux';
 import DictionaryWindow from './DictionaryWindow';
@@ -16,6 +16,7 @@ import { identifyEntity, setLoadingState, updateAllDictionaryData, updateDiction
 import TextWindow from './TextWindow';
 import MarkView from './MarkView';
 import Loading from './Loading/index';
+import TrainView from './TrainView';
 
 
 const { ipcRenderer } = (window as any).electron
@@ -117,6 +118,14 @@ class Main extends Component<MainProps, MainState>{
                 ))
               }
             </SubMenu>
+            <Menu.Item key={'train'} icon={<Icon component={TrainIcon}/>} onClick={
+              () => {
+                history.push('/train')
+              }
+            }>
+              训练数据
+            </Menu.Item>
+           
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -178,6 +187,8 @@ class Main extends Component<MainProps, MainState>{
               <Route path="/dictionary" component={DictionaryWindow} />
               <Route path="/texts" component={TextWindow}/>
               <Route path='/mark' component={MarkView} />
+              <Route path='/train' component={TrainView} />
+
               {/* <Route path="/force-directed" component={ForceDirectedView} exact/> */}
             </Switch>
           </Content>

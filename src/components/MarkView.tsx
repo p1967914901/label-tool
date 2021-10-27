@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Key } from 'react';
 import { Input, Modal, Table, Tag, Popover, Button } from 'antd';
 import 'antd/dist/antd.css';
 import Icon, { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -6,8 +6,8 @@ import Icon, { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons
 import { ColorResult, SketchPicker } from 'react-color';
 import { SettingIcon } from './Icon';
 import { connect } from 'react-redux';
-import { FontObject, MarkViewStoreType, StoreType } from '../types/propsTypes';
-import { updateMarkTextData, updateTextTablePage } from '../action';
+import { FontObject, MarkTextsDataType, MarkViewStoreType, StoreType } from '../types/propsTypes';
+import { updateMarkTextData, updateTextTablePage, updateTrainData } from '../action';
 import { updateTextsData } from '../action';
 
 
@@ -18,6 +18,7 @@ interface MarkViewProps extends MarkViewStoreType {
 	updateTextTablePage: typeof updateTextTablePage,
 	updateMarkTextData: typeof updateMarkTextData,
 	updateTextsData: typeof updateTextsData,
+	updateTrainData: typeof updateTrainData,
 }
 interface MarkViewState {
 	editKey: string,
@@ -33,6 +34,8 @@ interface MarkViewState {
 		key: string
 	},
 	popoverVisibleName: string,
+	selectedRowKeys: Array<Key>,
+	selectedRows: MarkTextsDataType,
 }
 
 // const { ipcRenderer } = (window as any).electron;
@@ -50,6 +53,8 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 			editKey: '',
 			inputVisible: false,
 			popoverVisibleName: '',
+			selectedRowKeys: [],
+			selectedRows: [],
 			labelSettingConfig: {
 				label: '',
 				color: '',
@@ -196,10 +201,10 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 
 	public render(): JSX.Element {
 		// const dataStr = 
-		const { labels, inputVisible, labelSettingConfig, popoverVisibleName } = this.state
-		const { history, current, data, updateTextTablePage, updateTextsData } = this.props
+		const { labels, inputVisible, labelSettingConfig, popoverVisibleName, selectedRowKeys, selectedRows } = this.state
+		const { history, current, data, updateTextTablePage, updateTextsData, updateTrainData, updateMarkTextData } = this.props
 		// if ()
-		console.log(data[0]);
+		// console.log(data[0]);
 		return (
 			<div style={{
 				width: '100%',
@@ -413,21 +418,32 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 							// this.setState({ pageSize: (pageSize as number) })
 						}
 					}}
+					rowSelection={{
+						selectedRowKeys,
+						onChange: (selectedRowKeys, selectedRows) => {
+							this.setState({ selectedRowKeys, selectedRows })
+							// console.log(selectedRowKeys, selectedRows)
+						}
+						
+					}}
 				/>
 				<Button type='primary' style={{
 					// float: 'left'
 					transform: 'translate(10px, -40px)'
 				}} onClick={
 					() => { 
+						updateTrainData(selectedRows)
+						console.log(selectedRowKeys)
+						updateMarkTextData(data.filter((value: { key?: string | undefined; text: string; label: { start: number; end: number; label: string; }[]; textArr: FontObject[]; }) => !selectedRowKeys.includes(value['key'] as string)))
+						this.setState({ selectedRowKeys: [], selectedRows: [] })
+					}
+				}>加入训练集</Button>
+				<Button type='primary' style={{
+					// float: 'left'
+					transform: 'translate(20px, -40px)'
+				}} onClick={
+					() => { 
 						history.push('/texts')
-
-						// for(let i = labelRecord.length - 1; i >= 0; i--) {
-						// 	data[i]['label'] = labelRecord[i].map((value: { start: number; end: number; label: string; text: string; color: string; }) => ({
-						// 		start: value['start'],
-						// 		end: value['end'],
-						// 		label: value['label']
-						// 	}))
-						// }
 						updateTextsData([...data], '')
 					}
 				}>返回</Button>
@@ -473,7 +489,8 @@ const mapStateToProps = (state:StoreType, ownProps?: any) => {
 const mapDispatchToProps = {
   updateTextTablePage,
 	updateMarkTextData,
-	updateTextsData
+	updateTextsData,
+	updateTrainData
 }
 
 

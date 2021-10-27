@@ -262,29 +262,29 @@ def json_json_prd(filepath,savePath,onuse_str,tagger):
 						lb['start'] = index
 						lb['label'] = label
 		arr.append(temp_dict)
-	# print(len(arr))
-	# print(len(train_list))
-	new_arr= []        
-	for train,predict in zip(train_list,arr):       #保留训练集中已经打好标签的   并输出json格式的预测集
-		temp_dict = {"text":"",'labels':[]}
-		temp_dict["text"] = train["text"]
-		temp_dict["labels"] = train["labels"]
-		predict_labels = predict["labels"]
-		if train["labels"] == []:
-			temp_dict["labels"] = predict["labels"]
-			new_arr.append(temp_dict)
-			continue
-		if predict_labels != []:
-			for elem in predict_labels:
-				flag = 0
-				for i in train["labels"]:
-					if (elem['start'] <= i['start'] and elem['end'] >= i['end']) or (elem['start'] <i['end'] and elem['end']>=i['end']):
-						flag = 1
-						break
-				if flag == 0:
-					temp_dict["labels"].append(elem)
-		new_arr.append(temp_dict)
-	txtWrite.write(json.dumps(new_arr,indent=4,ensure_ascii=False))
+
+		
+	# new_arr= []        
+	# for train,predict in zip(train_list,arr):       #保留训练集中已经打好标签的   并输出json格式的预测集
+	# 	temp_dict = {"text":"",'labels':[]}
+	# 	temp_dict["text"] = train["text"]
+	# 	temp_dict["labels"] = train["labels"]
+	# 	predict_labels = predict["labels"]
+	# 	if train["labels"] == []:
+	# 		temp_dict["labels"] = predict["labels"]
+	# 		new_arr.append(temp_dict)
+	# 		continue
+	# 	if predict_labels != []:
+	# 		for elem in predict_labels:
+	# 			flag = 0
+	# 			for i in train["labels"]:
+	# 				if (elem['start'] <= i['start'] and elem['end'] >= i['end']) or (elem['start'] <i['end'] and elem['end']>=i['end']):
+	# 					flag = 1
+	# 					break
+	# 			if flag == 0:
+	# 				temp_dict["labels"].append(elem)
+	# 	new_arr.append(temp_dict)
+	txtWrite.write(json.dumps(arr,indent=4,ensure_ascii=False))
 	txtWrite.close()
 	js.close()
 
@@ -349,7 +349,7 @@ def predict(filepath,savePath,model = os.path.dirname(os.path.realpath(sys.argv[
 	tagger = Perceptron(model)
 	key=filepath.split(".")[-1]
 	key2 = savePath.split(".")[-1]
-	txt_json_prd(filepath,savePath,onuse_str,tagger)
+	# txt_json_prd(filepath,savePath,onuse_str,tagger)
 	if key=="json" and key2=="txt":
 		json_txt_prd(filepath,savePath,onuse_str,tagger)
 	elif key=="txt" and key2=="txt":
@@ -372,10 +372,10 @@ def get_arg():
 	elif len(args) == 3:                #传入2个参数的时候  1.json格式训练集路径  2.json格式预测集路径
 		train_path = args[1]
 		train(filepath=train_path,nr_iter=3) 
-		current_dir = os.path.dirname(os.path.realpath(sys.argv[0])) + r'.\result.json'
+		current_dir = os.path.dirname(os.path.realpath(sys.argv[0])) + r'\result.json'
 		predict_path = args[2]
 		write_predict(predict_path, r'.\result.json')
-		print(current_dir)
+		print("success")
 	elif len(args) == 4:                    #传入3个参数的时候  1.json格式训练集路径  2.json格式预测集路径    3.json格式预测结果的保存路径
 		train_path = args[1]
 		train(filepath=train_path,nr_iter=3) 
@@ -389,4 +389,4 @@ def get_arg():
 
 if __name__ == '__main__':
 	get_arg()
-	time.sleep(2)
+	time.sleep(1)

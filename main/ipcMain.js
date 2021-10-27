@@ -124,19 +124,29 @@ exports.newIpcListener = (mainWindow) => {
     /**
      * 识别实体
      */
-    ipcMain.on(IDENTIFY_ENTITY, (event, data, labelToColor) => {
+    ipcMain.on(IDENTIFY_ENTITY, (event, dataByTrain, data, labelToColor) => {
         // console.log(labelToColor)
-        const writeFilePromise = new Promise((resolve, reject) => {
-            fs.writeFile(__dirname + '/data/data.json', JSON.stringify(data), err => {
-                if (err) {
-                    reject(err)
-                }
-                // console.log('success')
-                resolve(__dirname + '/data/data.json')
+        const writeFilePromise = Promise.all([new Promise((resolve, reject) => {
+                fs.writeFile(__dirname + '/data/dataByTrain.json', JSON.stringify(dataByTrain), err => {
+                    if (err) {
+                        reject(err)
+                    }
+                    // console.log('success')
+                    resolve(__dirname + '/data/dataByTrain.json')
+                })
+            }), new Promise((resolve, reject) => {
+                fs.writeFile(__dirname + '/data/data.json', JSON.stringify(data), err => {
+                    if (err) {
+                        reject(err)
+                    }
+                    // console.log('success')
+                    resolve(__dirname + '/data/data.json')
+                })
             })
-        })
-        writeFilePromise.then((path) => {//__dirname + '/tools/data.json'
-            const result = spawn(__dirname + '/tools/jiagu_train_model.exe', [path]);
+        ])
+
+        writeFilePromise.then((paths) => {
+            const result = spawn(__dirname + '/tools/jiagu_train_model.exe', paths);
             result.on('close', function (code) {
                 console.log('child process exited with code :' + code);
             });
@@ -147,9 +157,10 @@ exports.newIpcListener = (mainWindow) => {
                         if (err) {
                             return console.log(err)
                         }
-                        const data = JSON.parse(fileData.toString()).map(value => {
+                        const data = JSON.parse(fileData.toString()).map((value, i) => {
                             returnValue = {
                                 text: value['text'],
+                                key: '' + i,
                                 textArr: value['text'].split('').map((v, index) => ({
                                     text: v,
                                     start: index,
